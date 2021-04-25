@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "581381072686",
+    "project_id": "samproject-a33bb",
+    "storage_bucket": "samproject-a33bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581381072686:android:c4a46d75ad1cbb180f7cbf",
+        "android_client_info": {
+          "package_name": "com.apollyon.samproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581381072686-75gorsm0bf5anlnquupojarutegl556q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0LTSoitiuMB_CVemtrhgF9-GnQPmNlhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581381072686-75gorsm0bf5anlnquupojarutegl556q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

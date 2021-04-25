@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_button_text">Login</string>
+    <string name="registrate_text">First time here? Sign up for this adventure!</string>
+</resources>
