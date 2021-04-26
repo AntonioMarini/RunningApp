@@ -26,9 +26,28 @@ class LoginActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         auth = Firebase.auth
+        val user = Firebase.auth.currentUser
+
+
+        if (user != null) {
+            // User is signed in (getCurrentUser() will be null if not signed in)
+            val intent = Intent(this, MainActivity::class.java);
+            intent.putExtra("user", user)
+            startActivity(intent);
+            finish();
+        }
+        //TODO fai mettere email a cui spedire la password
+
+        val forget_butt : TextView = findViewById(R.id.forget_password)
+        forget_butt.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java);
+            startActivity(intent);
+        }
+
+
 
         val register : TextView = findViewById(R.id.registrate_label)
         register.setOnClickListener {
@@ -36,7 +55,7 @@ class LoginActivity : AppCompatActivity(){
             startActivity(intent)
         }
 
-        val loginButton = findViewById<Button>(R.id.login_button)
+        val loginButton = findViewById<Button>(R.id.send_button)
         loginButton.setOnClickListener {
             login()
         }
@@ -45,7 +64,7 @@ class LoginActivity : AppCompatActivity(){
 
     private fun login() {
         //validate form
-        emailEdit = findViewById(R.id.emailEdit)
+        emailEdit = findViewById(R.id.email_edit)
         passwordEdit = findViewById(R.id.passwordEdit)
 
         val email = emailEdit.text.toString().trim()

@@ -36,12 +36,12 @@ class Register : AppCompatActivity() , View.OnClickListener{
         banner = findViewById(R.id.banner)
         banner.setOnClickListener(this)
 
-        registerUser = findViewById(R.id.login_button)
+        registerUser = findViewById(R.id.send_button)
         registerUser.setOnClickListener(this)
 
         ageEdit = findViewById(R.id.age)
         usernameEdit = findViewById(R.id.username)
-        emailEdit = findViewById(R.id.emailEdit)
+        emailEdit = findViewById(R.id.email_edit)
         passwordEdit = findViewById(R.id.password)
         retypePasswordEdit = findViewById(R.id.passwordEdit)
 
@@ -51,7 +51,7 @@ class Register : AppCompatActivity() , View.OnClickListener{
     override fun onClick(v: View?) {
         when (v!!.id){
             R.id.banner -> startActivity(Intent(this, LoginActivity::class.java))
-            R.id.login_button -> register()
+            R.id.send_button -> register()
         }
     }
 
@@ -149,30 +149,6 @@ class Register : AppCompatActivity() , View.OnClickListener{
                 }
             })
 
-        /*mAuth!!.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if(task.isSuccessful){
-                val user  = User(email, username, age.toInt())
 
-                FirebaseAuth.getInstance().currentUser?.let { it1 ->
-                    FirebaseDatabase.getInstance().getReference("Users")
-                        .child(it1.uid)
-                        .setValue(user).addOnCompleteListener {
-                            if(it.isSuccessful){
-                                Toast.makeText( this@Register, "User has been registered succesfully!", Toast.LENGTH_LONG).show()
-                                progressBar.visibility = View.INVISIBLE
-
-                                // redirect to Login Layout
-
-                            }else{
-                                Toast.makeText( this@Register, "Failed to register!", Toast.LENGTH_LONG).show()
-                                progressBar.visibility = View.INVISIBLE
-                            }
-                        }
-                }
-            }else{
-                Toast.makeText( this@Register, "Failed to register!", Toast.LENGTH_LONG).show()
-                progressBar.visibility = View.INVISIBLE
-            }
-        }*/
     }
 }
