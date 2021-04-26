@@ -1,16 +1,13 @@
 package com.apollyon.samproject
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.widget.Button
-import android.widget.EditText
+import android.widget.Toast
+import androidx.core.view.iterator
+import androidx.fragment.app.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 
 private lateinit var logoutButt : Button
 
@@ -21,6 +18,8 @@ class MainActivity : AppCompatActivity() {
 
         //val users = Firebase.database.getReference("users")
 
+        //TODO move this in profile fragment
+        /*
         val logoutButton : Button = findViewById(R.id.logout_butt)
 
         logoutButton.setOnClickListener {
@@ -29,29 +28,76 @@ class MainActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
+        }*/
+        if (savedInstanceState == null) {
+
+            val fragment = HomeFragment.newInstance("","")
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container_view, fragment, "home")
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            fragmentTransaction.commit()
+
         }
 
 
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        //print(fragment.tag.toString())
+
+
+        val bottomNavigationView : BottomNavigationView= findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener {  item ->
             when(item.itemId) {
                 R.id.home -> {
                     // Respond to navigation item 1 click
+                    val fragment = HomeFragment.newInstance("","")
+                    replaceFragment(fragment, "home")
+                    for (it in bottomNavigationView.menu){
+                        it.isEnabled = true
+                    }
+                    item.isEnabled = false
                     true
                 }
                 R.id.stats -> {
                     // Respond to navigation item 2 click
+
+                    val fragment = StatsFragment.newInstance("","")
+                    replaceFragment(fragment, "stats")
+                    for (it in bottomNavigationView.menu){
+                        it.isEnabled = true
+                    }
+                    item.isEnabled = false
                     true
                 }
                 R.id.new_session -> {
                     // Respond to navigation item 2 click
+                    val fragment = NewSessionFragment.newInstance("","")
+                    replaceFragment(fragment,"new")
+                    for (it in bottomNavigationView.menu){
+                        it.isEnabled = true
+                    }
+                    item.isEnabled = false
                     true
                 }
                 R.id.trainer -> {
                     // Respond to navigation item 2 click
+
+                    val fragment = TrainerFragment.newInstance("","")
+                    replaceFragment(fragment,"train")
+                    for (it in bottomNavigationView.menu){
+                        it.isEnabled = true
+                    }
+                    item.isEnabled = false
                     true
                 }
                 R.id.profile -> {
                     // Respond to navigation item 2 click
+
+                    val fragment = ProfileFragment.newInstance("","")
+                    replaceFragment(fragment,"profile")
+                    for (it in bottomNavigationView.menu){
+                        it.isEnabled = true
+                    }
+                    item.isEnabled = false
                     true
                 }
                 else -> false
@@ -61,5 +107,19 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
+
+
+    private fun replaceFragment(fragment:Fragment, tag:String){
+
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragment_container_view, fragment, tag)
+        //fragmentTransaction.addToBackStack(null)
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit()
+
+    }
+
+
 
 }

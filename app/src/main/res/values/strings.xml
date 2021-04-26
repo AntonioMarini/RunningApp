@@ -15,4 +15,9 @@
     <string name="send">Send</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="trainer">Trainer</string>
+    <string name="new_session">New Session</string>
+    <string name="profile">Profile</string>
+    <string name="stats">Statistics</string>
 </resources>
