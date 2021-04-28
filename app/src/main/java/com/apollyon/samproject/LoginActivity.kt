@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 
 
@@ -19,12 +20,11 @@ class LoginActivity : AppCompatActivity(){
 
 
     private lateinit var auth: FirebaseAuth
-
     private lateinit var emailEdit :EditText
     private lateinit var passwordEdit :EditText
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -47,12 +47,11 @@ class LoginActivity : AppCompatActivity(){
             startActivity(intent);
         }
 
-
-
         val register : TextView = findViewById(R.id.registrate_label)
         register.setOnClickListener {
             val intent = Intent(this, Register::class.java)
             startActivity(intent)
+            finish()
         }
 
         val loginButton = findViewById<Button>(R.id.send_button)
@@ -92,19 +91,12 @@ class LoginActivity : AppCompatActivity(){
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "You are logged in succesfully.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     intent.putExtra(
-                        "user_id",
-                        FirebaseAuth.getInstance().currentUser!!.uid
+                        "user",
+                        FirebaseAuth.getInstance().currentUser
                     )
-                    intent.putExtra("email_id", email)
                     startActivity(intent)
                     finish()
                 } else {

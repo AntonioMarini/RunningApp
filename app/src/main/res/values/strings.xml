@@ -20,4 +20,5 @@
     <string name="new_session">New Session</string>
     <string name="profile">Profile</string>
     <string name="stats">Statistics</string>
+    <string name="settings">Settings</string>
 </resources>

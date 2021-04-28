@@ -10,6 +10,9 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 private lateinit var banner : TextView
@@ -25,6 +28,7 @@ private lateinit var retypePasswordEdit : EditText
 private lateinit var progressBar : ProgressBar
 
 private var mAuth: FirebaseAuth? = null
+private var database : FirebaseDatabase? = null
 
 class Register : AppCompatActivity() , View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +50,10 @@ class Register : AppCompatActivity() , View.OnClickListener{
         retypePasswordEdit = findViewById(R.id.passwordEdit)
 
         progressBar = findViewById(R.id.progressBar)
+
+        database = Firebase.database
+
+
     }
 
     override fun onClick(v: View?) {
@@ -56,14 +64,13 @@ class Register : AppCompatActivity() , View.OnClickListener{
     }
 
     private fun register() {
-
-
-        validateForm()
-
-
+        if(validateForm()){
+            progressBar.visibility = View.VISIBLE
+            register_user()
+        }
     }
 
-    private fun validateForm(){
+    private fun validateForm() : Boolean{
 
         val email = emailEdit.text.toString().trim()
         val username = usernameEdit.text.toString().trim()
@@ -74,81 +81,104 @@ class Register : AppCompatActivity() , View.OnClickListener{
         if(username.isEmpty()){
             usernameEdit.error = "username is required"
             usernameEdit.requestFocus()
-            return
+            return false
         }
 
         if(age.isEmpty()){
             ageEdit.error = "age is required"
             ageEdit.requestFocus()
-            return
+            return false
         }
 
         if(email.isEmpty()){
             emailEdit.error = "email is required"
             emailEdit.requestFocus()
-            return
+            return false
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             emailEdit.error = "please provide valid email"
             emailEdit.requestFocus()
-            return
+            return false
         }
 
         if(password.isEmpty()){
             passwordEdit.error = "password is required"
             passwordEdit.requestFocus()
-            return
+            return false
         }
 
         if(password.length < 6){
             passwordEdit.error = "password is too short"
             passwordEdit.requestFocus()
-            return
+            return false
         }
 
         if(retypedPassword.isEmpty()){
             retypePasswordEdit.error = "write again your password"
             retypePasswordEdit.requestFocus()
-            return
+            return false
         }
 
         if(!password.contentEquals(retypedPassword)){
             retypePasswordEdit.error = "password does not match"
             retypePasswordEdit.requestFocus()
-            return
+            return false
         }
 
-        progressBar.visibility = View.VISIBLE
+        return true
 
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener( OnCompleteListener<AuthResult> { task ->
-                   //if the registration is succesfully done
-                if (task.isSuccessful){
-                    val firebaseUser: FirebaseUser = task.result!!.user!!
+    }
 
-                    Toast.makeText(
-                        this@Register,
-                        "You are registered succesfully.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+    private fun register_user(){
 
-                    val intent =
-                        Intent(this@Register, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    intent.putExtra("user_id", firebaseUser.uid)
-                    intent.putExtra("email_id", email)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(
+        val email = emailEdit.text.toString().trim()
+        val username = usernameEdit.text.toString().trim()
+        val age = ageEdit.text.toString().toInt()
+        val password = passwordEdit.text.toString()
+
+        mAuth!!.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener( OnCompleteListener<AuthResult> { task ->
+                    //if the registration is succesfully done
+                    if (task.isSuccessful){
+                        val firebaseUser: FirebaseUser = task.result!!.user!!
+
+                        Toast.makeText(
+                                this@Register,
+                                "You are registered succesfully.",
+                                Toast.LENGTH_SHORT
+                        ).show()
+
+                        val user : User = User(email, username, age)
+                        add_User(user, firebaseUser)
+
+                        val intent =
+                                Intent(this@Register, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.putExtra("user", firebaseUser)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(
+                                this@Register,
+                                task.exception!!.message.toString(),
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+    }
+
+    private fun add_User(user: User, firebaseUser: FirebaseUser){
+        val myRef = database!!.getReference("users")
+        myRef.child(firebaseUser.uid).setValue(user).addOnCompleteListener { task ->
+            if (!task.isSuccessful){
+                Toast.makeText(
                         this@Register,
                         task.exception!!.message.toString(),
                         Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-
+                ).show()
+            }
+        }
 
     }
 }
