@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,7 +27,7 @@
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/email_hint"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="@+id/banner"
         app:layout_constraintHorizontal_bias="0.537"
         app:layout_constraintStart_toStartOf="@+id/banner"
@@ -44,7 +44,8 @@
         app:layout_constraintEnd_toEndOf="@+id/email_edit"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/email_edit"
-        app:layout_constraintTop_toBottomOf="@+id/email_edit" />
+        app:layout_constraintTop_toBottomOf="@+id/email_edit"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/age"
@@ -57,7 +58,8 @@
         app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/username"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toBottomOf="@+id/username"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/passwordEdit"
@@ -69,7 +71,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/password"
@@ -81,7 +84,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@+id/age"
         app:layout_constraintStart_toStartOf="@+id/age"
-        app:layout_constraintTop_toBottomOf="@+id/age" />
+        app:layout_constraintTop_toBottomOf="@+id/age"
+        android:autofillHints="" />
 
     <Button
         android:id="@+id/send_button"
@@ -107,3 +111,4 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

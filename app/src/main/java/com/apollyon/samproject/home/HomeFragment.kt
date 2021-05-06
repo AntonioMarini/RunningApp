@@ -1,4 +1,4 @@
-package com.apollyon.samproject
+package com.apollyon.samproject.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,17 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.apollyon.samproject.R
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_USERNAME = "username"
+private const val ARG_USERNAME = "user"
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var username: String? = null
@@ -40,7 +36,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val welcomeText : TextView = view.findViewById(R.id.textView_welcome)
-        welcomeText.text = "Welcome back, " + username
+        welcomeText.text = "Welcome $username"
 
     }
 
@@ -54,7 +50,7 @@ class HomeFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(username : String?) =
+        fun newInstance(username: String?) =
                 HomeFragment().apply {
                     arguments = Bundle().apply {
                         putString(ARG_USERNAME, username)
