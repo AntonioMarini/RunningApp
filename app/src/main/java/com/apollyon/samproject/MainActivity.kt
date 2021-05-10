@@ -1,79 +1,71 @@
 package com.apollyon.samproject
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.view.iterator
 import androidx.fragment.app.*
-import com.apollyon.samproject.datastruct.User
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.apollyon.samproject.databinding.ActivityMainBinding
 import com.apollyon.samproject.home.HomeFragment
 import com.apollyon.samproject.newsession.NewSessionFragment
 import com.apollyon.samproject.profile.ProfileFragment
 import com.apollyon.samproject.stats.StatsFragment
 import com.apollyon.samproject.trainer.TrainerFragment
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
+import de.hdodenhof.circleimageview.CircleImageView
 
 class MainActivity : AppCompatActivity() {
 
-    private var database : FirebaseDatabase? = null
-
+    private lateinit var binding : ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val firebaseUser : FirebaseUser = intent.extras?.get("user") as FirebaseUser
-        val userReference = FirebaseDatabase.getInstance().getReference("users").child(firebaseUser.uid)
-        var user : User? = null
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        val profileImage : CircleImageView = binding.profileImage
+
+        if(viewModel.authUser?.photoUrl != null){
+            Glide.with(this)
+                    .load(viewModel.authUser?.photoUrl).into(profileImage)
+        }else{
+            Log.d(ContentValues.TAG,"userUri is null")
+        }
+
+        viewModel.profileImageDownloaded.observe(this, Observer {uri ->
+            Glide.with(this /* context */)
+                .load(uri)
+                .into(profileImage)
+        })
+
         val fragment: HomeFragment
 
-        val userListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Get Post object and use the values to update the UI
-                user = dataSnapshot.getValue<User>()
-
-                // ...
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
-        userReference.addValueEventListener(userListener)
-        
-
-
         if (savedInstanceState == null) {
-
-            fragment = HomeFragment.newInstance(user?.username)
+            fragment = HomeFragment.newInstance()
             val fragmentTransaction = supportFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragment_container_view, fragment, "home")
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             fragmentTransaction.commit()
-
         }
 
-
-        Log.println(Log.INFO, null, user?.username.toString())
-        val toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_cont)
         //setSupportActionBar(toolbar)
 
-
-        val bottomNavigationView : BottomNavigationView= findViewById(R.id.bottom_navigation)
+        val bottomNavigationView : BottomNavigationView= binding.bottomNavigation
         bottomNavigationView.setOnNavigationItemSelectedListener {  item ->
             when(item.itemId) {
                 R.id.home -> {
                     // Respond to navigation item 1 click
-                    val fragment = HomeFragment.newInstance(user?.username)
+                    val fragment = HomeFragment.newInstance()
                     replaceFragment(fragment, "home")
                     for (it in bottomNavigationView.menu){
                         it.isEnabled = true
@@ -116,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.profile -> {
                     // Respond to navigation item 2 click
 
-                    val fragment = ProfileFragment.newInstance("","")
+                    val fragment = ProfileFragment.newInstance()
                     replaceFragment(fragment,"profile")
                     for (it in bottomNavigationView.menu){
                         it.isEnabled = true
@@ -127,13 +119,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
-
-
-
     }
-
-
 
     private fun replaceFragment(fragment:Fragment, tag:String){
 
@@ -142,9 +128,6 @@ class MainActivity : AppCompatActivity() {
         //fragmentTransaction.addToBackStack(null)
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit()
-
     }
-
-
 
 }
