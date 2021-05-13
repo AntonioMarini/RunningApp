@@ -9,7 +9,7 @@ import com.google.firebase.ktx.Firebase
 
 class LoginViewModel : ViewModel(){
 
-    var auth: FirebaseAuth
+    var auth: FirebaseAuth = Firebase.auth
 
     private val _userLogged = MutableLiveData<Boolean>()
     val userLogged : LiveData<Boolean>
@@ -26,9 +26,7 @@ class LoginViewModel : ViewModel(){
     init {
         _email.value = ""
         _password.value = ""
-        auth = Firebase.auth
     }
-
 
     fun login() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_email.value,_password.value)

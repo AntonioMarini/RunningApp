@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="loginViewModel"
+            type="com.apollyon.samproject.auth.LoginViewModel" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,6 +36,7 @@
         android:inputType="textEmailAddress"
         android:textAlignment="center"
         android:textSize="14sp"
+        android:text="@{loginViewModel.email}"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/banner" />
@@ -45,6 +51,7 @@
         android:inputType="textPassword"
         android:textAlignment="center"
         android:textSize="14sp"
+        android:text="@{loginViewModel.password}"
         app:layout_constraintEnd_toEndOf="@+id/email_edit"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/email_edit"

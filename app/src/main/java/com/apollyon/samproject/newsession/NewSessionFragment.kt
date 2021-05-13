@@ -1,60 +1,71 @@
 package com.apollyon.samproject.newsession
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
+import com.apollyon.samproject.MainViewModel
 import com.apollyon.samproject.R
+import com.apollyon.samproject.UI.Adapter
+import com.apollyon.samproject.UI.TrainingMode
+import com.apollyon.samproject.databinding.FragmentNewSessionBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [NewSessionFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class NewSessionFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var viewPager: ViewPager
+    private lateinit var adapter: Adapter
+
+    private val mainViewModel : MainViewModel by activityViewModels()
+
+    private lateinit var binding : FragmentNewSessionBinding
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_session, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_session, container, false)
+
+        binding.mainViewModel = mainViewModel
+        binding.lifecycleOwner = this
+
+        val sessionViewModel = ViewModelProvider(this, SessionViewModelFactory(mainViewModel.database, requireActivity().application)).get(SessionViewModel::class.java)
+        binding.sessionViewModel = sessionViewModel
+
+        val trainingModes = ArrayList<TrainingMode>()
+        trainingModes.add(TrainingMode(R.drawable.raccoon, "Standard Running", "This is pretty normal"))
+        trainingModes.add(TrainingMode(R.drawable.ghepardo, "HIIT Running", "High-intensity interval training running consists of intervals of high intensive run with lower intensive intervals"))
+        trainingModes.add(TrainingMode(R.drawable.falco, "Cycling", "Bike is nice"))
+
+        adapter = Adapter(trainingModes, context)
+
+        viewPager = binding.pager
+        viewPager.adapter = adapter
+        viewPager.setPadding(130, 0, 130, 0)
+
+        viewPager.addOnPageChangeListener(this)
+
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment NewSessionFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            NewSessionFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
     }
+
+    override fun onPageSelected(position: Int) {
+
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+
+    }
+
+
 }
