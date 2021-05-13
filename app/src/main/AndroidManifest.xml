@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SAMproject">
-        <activity android:name=".RunActivity"></activity>
+        <activity android:name=".run.RunActivity"></activity>
         <activity android:name=".auth.ForgotPasswordActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".auth.RegisterActivity" />

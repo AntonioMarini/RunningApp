@@ -1,9 +1,12 @@
 package com.apollyon.samproject.datastruct
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "running_sessions")
 data class RunningSession(
 
@@ -22,4 +25,4 @@ data class RunningSession(
         @ColumnInfo(name = "float")
         var kilometers : Float
 
-)
+) : Parcelable
