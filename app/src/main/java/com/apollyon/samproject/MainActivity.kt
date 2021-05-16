@@ -3,35 +3,32 @@ package com.apollyon.samproject
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.fragment.app.*
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.apollyon.samproject.databinding.ActivityMainBinding
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.apollyon.samproject.datastruct.RunningDatabase
 import com.apollyon.samproject.home.HomeFragment
-import com.apollyon.samproject.newsession.NewSessionFragment
-import com.apollyon.samproject.profile.ProfileFragment
-import com.apollyon.samproject.stats.StatsFragment
-import com.apollyon.samproject.trainer.TrainerFragment
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
         val dataSource = RunningDatabase.getInstance(application).runningSessionDao
-        viewModel = ViewModelProvider(this, MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
 
-        binding.mainViewModel = viewModel
-        binding.lifecycleOwner = this
+        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
+
+        val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
+        if (navHostFragment != null) NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.navController)
+
 
         if(viewModel.authUser?.photoUrl != null)
             changePicture(viewModel.authUser?.photoUrl)
@@ -40,58 +37,13 @@ class MainActivity : AppCompatActivity() {
             changePicture(uri)
         })
 
-        // imposto HomeFragment come fragment iniziale
-        if (savedInstanceState == null) {
-            replaceFragment(HomeFragment(), "home")
-        }
-
-        // keep this to enable it again when changing fragments
-        var previousItemSelected : MenuItem = binding.bottomNavigation.menu.findItem(R.id.home)
-
-        binding.bottomNavigation.setOnNavigationItemSelectedListener {  item ->
-
-            previousItemSelected.isEnabled = true
-            item.isEnabled = false
-            previousItemSelected = item
-
-            when(item.itemId) {
-                R.id.home -> {
-                    replaceFragment(HomeFragment(), "home")
-                    true
-                }
-                R.id.stats -> {
-                    replaceFragment(StatsFragment(), "stats")
-                    true
-                }
-                R.id.new_session -> {
-                    replaceFragment(NewSessionFragment(),"new")
-                    true
-                }
-                R.id.trainer -> {
-                    replaceFragment(TrainerFragment(),"train")
-                    true
-                }
-                R.id.profile -> {
-                    replaceFragment(ProfileFragment(),"profile")
-                    true
-                }
-
-                else -> false
-            }
-
-        }
     }
 
-    private fun replaceFragment(fragment:Fragment, tag:String){
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragment_container_view, fragment, tag)
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit()
-    }
 
     private fun changePicture(uri : Uri?){
+        val imageView = findViewById<ImageView>(R.id.profile_image)
         Glide.with(this)
-                .load(uri).into(binding.profileImage)
+            .load(uri).into(imageView)
     }
 
 }

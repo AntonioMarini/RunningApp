@@ -1,19 +1,17 @@
 package com.apollyon.samproject.newsession
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.apollyon.samproject.MainViewModel
 import com.apollyon.samproject.R
@@ -21,8 +19,6 @@ import com.apollyon.samproject.UI.Adapter
 import com.apollyon.samproject.UI.TrainingMode
 import com.apollyon.samproject.databinding.FragmentNewSessionBinding
 import com.apollyon.samproject.datastruct.FetchRunningSession
-import com.apollyon.samproject.datastruct.RunningSession
-import com.apollyon.samproject.run.RunActivity
 
 
 class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
@@ -33,18 +29,6 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
     private val mainViewModel : MainViewModel by activityViewModels()
 
     private lateinit var binding : FragmentNewSessionBinding
-
-    private lateinit var runningResultLauncher : ActivityResultLauncher<Void>
-
-
-    private val fetchRunningSession = registerForActivityResult(FetchRunningSession()){ session ->
-        if(session == null){
-            Log.i("Run","null")
-        }else{
-            Log.i("Run", "non null")
-        }
-    }
-
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +55,7 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
         viewPager.setPadding(130, 0, 130, 0)
 
         binding.buttonStart.setOnClickListener {
-            moveToRunActivity()
+            this.findNavController().navigate(NewSessionFragmentDirections.actionNewSessionToRunActivity())
         }
 
         viewPager.addOnPageChangeListener(this)
@@ -92,9 +76,6 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
             ;
     }
 
-    private fun moveToRunActivity() {
-        fetchRunningSession.launch(context)
-    }
 
 
 

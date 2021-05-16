@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContract
-import com.apollyon.samproject.run.RunActivity
+import com.apollyon.samproject.RunActivity
 
 class FetchRunningSession : ActivityResultContract<Context, RunningSession?>() {
 

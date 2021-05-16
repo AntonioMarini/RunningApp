@@ -11,9 +11,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.auth.LoginActivity
+import com.apollyon.samproject.AuthActivity
 import com.apollyon.samproject.databinding.FragmentProfileBinding
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
@@ -52,10 +53,10 @@ class ProfileFragment : Fragment() {
 
         binding.buttonLogout.setOnClickListener {
             Firebase.auth.signOut()
-            val intent = Intent(activity, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            activity?.finish()
+            this.findNavController().navigate(
+                ProfileFragmentDirections.actionProfileToAuthActivity()
+            )
+            requireActivity().finish()
         }
 
         binding.profileImage.setOnClickListener {

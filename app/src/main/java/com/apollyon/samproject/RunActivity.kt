@@ -1,4 +1,4 @@
-package com.apollyon.samproject.run
+package com.apollyon.samproject
 
 import android.app.Activity
 import android.content.Intent
@@ -19,7 +19,8 @@ class RunActivity : AppCompatActivity() {
         binding = ActivityRunBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.stopButt.setOnClickListener { returnSession() }
+        // da spostare nel frg
+        //binding.stopButton.setOnClickListener { returnSession() }
     }
 
 
