@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="52dp"
             android:text="@string/join_us"
-
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,6 +34,7 @@
             android:layout_marginStart="64dp"
             android:layout_marginTop="64dp"
             android:layout_marginEnd="64dp"
+            android:text="@{registerViewModel.email}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/banner" />
@@ -45,6 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:text="@{registerViewModel.username}"
             app:layout_constraintEnd_toEndOf="@+id/email_edit_reg"
             app:layout_constraintStart_toStartOf="@+id/email_edit_reg"
             app:layout_constraintTop_toBottomOf="@+id/email_edit_reg" />
@@ -55,6 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:text="@{registerViewModel.age.toString()}"
             app:layout_constraintEnd_toEndOf="@+id/username_reg"
             app:layout_constraintStart_toStartOf="@+id/username_reg"
             app:layout_constraintTop_toBottomOf="@+id/username_reg" />
@@ -65,6 +67,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:inputType="textPassword"
+            android:text="@{registerViewModel.password}"
             app:layout_constraintEnd_toEndOf="@+id/age_edit"
             app:layout_constraintStart_toStartOf="@+id/age_edit"
             app:layout_constraintTop_toBottomOf="@+id/age_edit" />
@@ -75,6 +79,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:inputType="textPassword"
+            android:text="@{registerViewModel.retypedPassword}"
             app:layout_constraintEnd_toEndOf="@+id/password_edit_reg"
             app:layout_constraintStart_toStartOf="@+id/password_edit_reg"
             app:layout_constraintTop_toBottomOf="@+id/password_edit_reg" />

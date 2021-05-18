@@ -96,6 +96,10 @@ dependencies {
     // Jetpack Compose Integration
     implementation "androidx.navigation:navigation-compose:1.0.0-alpha10"
 
+    //location google play services
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+
 
 
 

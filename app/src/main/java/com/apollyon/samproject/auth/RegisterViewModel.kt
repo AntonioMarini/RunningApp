@@ -30,23 +30,23 @@ class RegisterViewModel : ViewModel(){
     val userAdded : LiveData<Boolean>
         get() = _userAdded
 
-    private val _email = MutableLiveData<String>()
+    private val _email = MutableLiveData<String>("")
     val email : LiveData<String>
         get() = _email
 
-    private val _username = MutableLiveData<String>()
+    private val _username = MutableLiveData<String>("")
     val username : LiveData<String>
         get() = _username
 
-    private val _age = MutableLiveData<Int>()
+    private val _age = MutableLiveData<Int>(18)
     val age : LiveData<Int>
         get() = _age
 
-    private val _password = MutableLiveData<String>()
+    private val _password = MutableLiveData<String>("")
     val password : LiveData<String>
         get() = _password
 
-    private val _retypedPassword = MutableLiveData<String>()
+    private val _retypedPassword = MutableLiveData<String>("")
     val retypedPassword : LiveData<String>
         get() = _retypedPassword
 

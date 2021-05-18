@@ -5,6 +5,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRegisterBinding
+import kotlinx.android.synthetic.main.fragment_register.*
 
 
 class RegisterFragment : Fragment() , View.OnClickListener{
@@ -26,28 +28,12 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         savedInstanceState: Bundle?
     ): View? {
 
+        super.onCreateView(inflater, container, savedInstanceState)
+
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_register, container, false )
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
-
-        viewModel.email.observe(viewLifecycleOwner, Observer { email->
-            binding.emailEditReg.setText(email)
-        })
-
-        viewModel.username.observe(viewLifecycleOwner, Observer { username->
-           binding.usernameReg.setText(username)
-        })
-
-        viewModel.age.observe(viewLifecycleOwner, Observer { age->
-            binding.ageEdit.setText(age.toString())
-        })
-
-        viewModel.password.observe(viewLifecycleOwner, Observer { password->
-            binding.passwordEditReg.setText(password)
-        })
-
-        viewModel.retypedPassword.observe(viewLifecycleOwner, Observer { retypedPassword->
-            binding.passwordEditReg2.setText(retypedPassword)
-        })
+        binding.registerViewModel = viewModel
+        binding.lifecycleOwner = this
 
         viewModel.userAdded.observe(viewLifecycleOwner, Observer { userAdded ->
             if (userAdded){
@@ -64,16 +50,12 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         })
 
         binding.registerButton.setOnClickListener(this)
-        binding.registerButton.setOnClickListener(this)
-
-
-
         return binding.root
     }
 
     override fun onClick(v: View?) {
         when (v!!.id){
-            //R.id.banner -> startActivity(Intent(this, StartActivity::class.java))
+            R.id.banner -> findNavController().popBackStack()
             R.id.register_button -> register()
         }
     }
@@ -128,7 +110,7 @@ class RegisterFragment : Fragment() , View.OnClickListener{
 
         if(password.isEmpty()){
             binding.passwordEditReg.error = "password is required"
-            binding.passwordEditReg2.requestFocus()
+            binding.passwordEditReg.requestFocus()
             return false
         }
 
@@ -139,19 +121,22 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         }
 
         if(retypedPassword.isEmpty()){
-            binding.passwordEditReg2.error = "write again your password"
-            binding.passwordEditReg2.requestFocus()
+            inputError(password_edit_reg2, "write again your password")
             return false
         }
 
         if(!password.contentEquals(retypedPassword)){
-            binding.passwordEditReg2.error = "password does not match"
-            binding.passwordEditReg2.requestFocus()
+            inputError(password_edit_reg2, "password does not match")
             return false
         }
 
         return true
 
+    }
+
+    private fun inputError(textView: TextView, errorMessage : String){
+        textView.error = errorMessage
+        textView.requestFocus()
     }
 
 

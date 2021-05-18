@@ -1,5 +1,6 @@
 package com.apollyon.samproject.run
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,8 @@ import kotlinx.android.synthetic.main.fragment_run_results.*
 class RunResultsFragment : Fragment(){
 
     private lateinit var binding: FragmentRunResultsBinding
+
+    private lateinit var mapScreen : Bitmap
 
     override fun onCreateView(
         inflater: LayoutInflater,
