@@ -2,9 +2,11 @@ package com.apollyon.samproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 class AuthActivity : AppCompatActivity(){
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

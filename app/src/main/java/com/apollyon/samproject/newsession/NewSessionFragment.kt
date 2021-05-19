@@ -40,7 +40,7 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
-        val sessionViewModel = ViewModelProvider(this, SessionViewModelFactory(mainViewModel.database, requireActivity().application)).get(SessionViewModel::class.java)
+        val sessionViewModel = ViewModelProvider(this).get(SessionViewModel::class.java)
         binding.sessionViewModel = sessionViewModel
 
         val trainingModes = ArrayList<TrainingMode>()

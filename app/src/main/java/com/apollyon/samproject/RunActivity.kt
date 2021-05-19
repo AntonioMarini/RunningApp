@@ -28,7 +28,7 @@ class RunActivity : AppCompatActivity() {
         val data : Intent = Intent()
 
 //---set the data to pass back---
-        data.putExtra("session", RunningSession(0,"aaa", System.currentTimeMillis(),System.currentTimeMillis(), 0f));
+        data.putExtra("session", RunningSession());
         setResult(RESULT_OK, data);
 //---close the activity---
         finish();

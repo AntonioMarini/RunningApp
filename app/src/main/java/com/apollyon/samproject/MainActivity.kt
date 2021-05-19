@@ -22,13 +22,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dataSource = RunningDatabase.getInstance(application).runningSessionDao
+        //val dataSource = RunningDatabase.getInstance(application).runningSessionDao
 
-        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this , MainViewModelFactory(null)).get(MainViewModel::class.java)
 
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
         if (navHostFragment != null) NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.navController)
-
 
         if(viewModel.authUser?.photoUrl != null)
             changePicture(viewModel.authUser?.photoUrl)

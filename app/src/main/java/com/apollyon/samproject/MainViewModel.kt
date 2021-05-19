@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import java.io.ByteArrayOutputStream
 
-class MainViewModel(public val database: RunningSessionsDao) : ViewModel(){
+class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     private val firebaseSupport : FirebaseSupport = FirebaseSupport()
 

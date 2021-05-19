@@ -9,12 +9,13 @@ import androidx.fragment.app.Fragment
 
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Chronometer
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -23,14 +24,15 @@ import com.apollyon.samproject.PermissionUtils.isPermissionGranted
 import com.apollyon.samproject.PermissionUtils.requestPermission
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunMapBinding
+import com.apollyon.samproject.datastruct.RunningSession
 import com.google.android.gms.location.*
-
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.libraries.maps.CameraUpdateFactory
+import com.google.android.libraries.maps.GoogleMap
+import com.google.android.libraries.maps.OnMapReadyCallback
+import com.google.android.libraries.maps.SupportMapFragment
+import com.google.android.libraries.maps.model.LatLng
+import com.google.android.libraries.maps.model.PolylineOptions
+import com.google.maps.android.SphericalUtil
 
 class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     GoogleMap.OnMyLocationClickListener, OnMapReadyCallback,
@@ -53,6 +55,13 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     //map screenshot
     private lateinit var mapScreenshot : Bitmap
 
+    //km and time
+    private var km : Double = 0.00
+    private lateinit var lastLocation: Location
+
+    private var startTime: Long = SystemClock.elapsedRealtime()
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +69,7 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     ): View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         polylineOptions = PolylineOptions()
 
@@ -68,6 +78,8 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
                 locationResult ?: return
                 for (location in locationResult.locations){
                     val newPoint = LatLng(location.latitude, location.longitude)
+                    updateDistance(LatLng(lastLocation.latitude, lastLocation.longitude), newPoint)
+                    lastLocation = location
                     polylineOptions.add(newPoint).geodesic(true).color(R.color.primaryColor)
                     map.animateCamera(CameraUpdateFactory.newLatLng(newPoint))
                     map.addPolyline(polylineOptions)
@@ -78,15 +90,17 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
-        binding.stopButt.setOnClickListener{
-            map.snapshot(this)
-            this.findNavController().navigate(RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment())
+        binding.kmText.text = "km: 0.00"
 
+        binding.stopButt.setOnClickListener{
+            binding.chronometer.stop()
+            map.snapshot(this)
         }
     }
 
@@ -134,7 +148,6 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
-
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         enableMyLocation()
@@ -146,9 +159,11 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
             == PackageManager.PERMISSION_GRANTED) {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     map.isMyLocationEnabled = true
+                    lastLocation = location
+                    binding.kmText.text = String.format("km: %.2f", km)
+                    binding.chronometer.start()
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude),17f))
                 }
-
         } else {
             // Permission to access the location is missing. Show rationale and request permission
             requestPermission(
@@ -166,6 +181,11 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         }
     }
 
+    fun updateDistance(oldPoint: LatLng, newPoint : LatLng){
+        km += (SphericalUtil.computeDistanceBetween(oldPoint, newPoint) / 1000)
+        binding.kmText.text = String.format("km: %.2f", km)
+    }
+
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         fusedLocationClient.requestLocationUpdates(createLocationRequest(),
@@ -175,8 +195,9 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
 
     override fun onSnapshotReady(bitmap: Bitmap?) {
         if (bitmap != null) {
-            mapScreenshot = bitmap
+            this.findNavController().navigate(RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment(bitmap,
+                RunningSession()
+            ))
         }
     }
-
 }

@@ -9,6 +9,8 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -30,14 +32,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".RunActivity" />
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".RunActivity" android:launchMode="singleInstance" />
+        <activity android:name=".MainActivity" android:launchMode="singleInstance"></activity>
         <activity
             android:name=".AuthActivity"
-            android:theme="@style/Theme.SAMproject">
+            android:theme="@style/Theme.SAMproject"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
