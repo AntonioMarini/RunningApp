@@ -4,7 +4,9 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.location.Location
 import androidx.fragment.app.Fragment
 
@@ -20,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.PermissionUtils.isPermissionGranted
 import com.apollyon.samproject.PermissionUtils.requestPermission
@@ -51,15 +55,15 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     private lateinit var map: GoogleMap
     private lateinit var polylineOptions: PolylineOptions
 
-    // Location updates to show on map
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationCallback: LocationCallback
-    private var requestingLocationUpdates : Boolean = true
 
     //km and time
-    private var runPaused : Boolean = false
-    private var km : Double = 0.00
-    private lateinit var lastLocation: Location
+    private var curTimeInMillis = 0L
+    private var metersDone : Int = 0
+
+    private val viewModel : RunViewModel by activityViewModels()
+
+    private var isTracking =false
+    private var pathPoints = mutableListOf<MutableList<LatLng>>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -81,24 +85,21 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
+        subscribeToServiceObservers()
+
         binding.kmText.text = "km: 0.00"
 
         binding.startButt.setOnClickListener {
-            binding.chronometer.start()
-            sendCommandToService("ACTION_START_OR_RESUME_SERVICE")
-            runPaused = false
-        }
-
-        binding.pauseButt.setOnClickListener {
-            binding.chronometer.stop()
-            runPaused = true
+            toggleRun()
         }
 
         binding.stopButt.setOnClickListener{
-            binding.chronometer.stop()
+            stopRun()
             map.snapshot(this)
         }
     }
+
+
 
     override fun onStart() {
         super.onStart()
@@ -173,17 +174,88 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         }
     }
 
-    fun updateDistance(oldPoint: LatLng, newPoint : LatLng){
-        if(!runPaused) {
-            km += (SphericalUtil.computeDistanceBetween(oldPoint, newPoint) / 1000)
-            binding.kmText.text = String.format("km: %.2f", km)
+    private fun addAllPolylines(){
+        for(polyline in pathPoints){
+            polylineOptions = PolylineOptions()
+                .color(Color.RED)
+                .width(10f)
+                .addAll(polyline)
+            map.addPolyline(polylineOptions)
+            polylineOptions
+        }
+    }
+
+    private fun animateCameraToUser(){
+        if(pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()){
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(pathPoints.last().last(), 17f))
+        }
+    }
+
+    private fun subscribeToServiceObservers(){
+        RunService.isTracking.observe(viewLifecycleOwner, Observer { tracking ->
+            getPointsFromService(tracking)
+        })
+
+        RunService.pathPoints.observe(viewLifecycleOwner, Observer { points ->
+            pathPoints = points
+            addLatestPolyline()
+            animateCameraToUser()
+        })
+
+        RunService.distanceInMeters.observe(viewLifecycleOwner, Observer { meters ->
+            metersDone = meters
+            val km = meters.toDouble() * 0.001
+            km_text.text = String.format("Distance: %.2f km", km)
+        })
+
+        RunService.timeRunInMillis.observe(viewLifecycleOwner, Observer { millis ->
+            curTimeInMillis = millis
+            val formattedTime = RunUtil().getFormattedTime(curTimeInMillis, true)
+            chronometer.text = formattedTime
+        })
+    }
+
+    private fun toggleRun(){
+        if(isTracking){
+            sendCommandToService("ACTION_PAUSE_SERVICE")
+        }else{
+            sendCommandToService("ACTION_START_OR_RESUME_SERVICE")
+        }
+    }
+
+    private fun stopRun() {
+        sendCommandToService("ACTION_STOP_SERVICE")
+    }
+
+    private fun getPointsFromService(isTracking : Boolean){
+        this.isTracking = isTracking
+        if(!isTracking){
+            start_butt.text = "Start"
+            stop_butt.visibility = View.VISIBLE
+        }else{
+            start_butt.text = "Pause"
+            stop_butt.visibility = View.GONE
+        }
+    }
+
+    private fun addLatestPolyline(){
+        if(pathPoints.isNotEmpty() && pathPoints.last().size > 1){
+            val preLastLatLng = pathPoints.last()[pathPoints.last().size - 2]
+            val lastLatLng = pathPoints.last().last()
+
+            polylineOptions = PolylineOptions()
+                .color(R.color.color3)
+                .width(10f)
+                .add(preLastLatLng)
+                .add(lastLatLng)
+            map.addPolyline(polylineOptions)
         }
     }
 
     override fun onSnapshotReady(bitmap: Bitmap?) {
         if (bitmap != null) {
             this.findNavController().navigate(RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment(bitmap,
-                RunningSession()
+                RunningSession(distanceInMeters = metersDone, timeMilli = curTimeInMillis, timestamp = System.currentTimeMillis())
             ))
         }
     }
@@ -196,9 +268,10 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        enableMyLocation()
         if (googleMap != null) {
             map = googleMap
+            addAllPolylines()
         }
-        enableMyLocation()
     }
 }

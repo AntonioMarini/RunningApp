@@ -24,7 +24,7 @@
     <string name="reset_pass">Reset Password</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
-    <string name="km_text">km: </string>
+    <string name="km_text">Distance: </string>
 
 
     <!-- Permissions -->
@@ -33,8 +33,9 @@
     <string name="permission_required_toast">Location permission is required for this demo.</string>
 
     <!-- MAP IDS -->
-    <string name="map_dark_id">902a31895dc64588</string>
+    <string name="map_dark_id">559db652f34e3e3e</string>
     <string name="start_text">Start</string>
     <string name="pause_text">pause</string>
+    <string name="start_time">00:00:00:00</string>
 
 </resources>

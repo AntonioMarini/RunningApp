@@ -37,9 +37,8 @@ class RunResultsFragment : Fragment(){
 
         session = arguments.session
 
-        //binding.textKm.text = String.format("Distance: %.2f", session.distanceInMeters)
-
-
+        val km = session.distanceInMeters.toDouble() * 0.001
+        binding.textKm.text = String.format("Distance: %.2f km", km)
 
         binding.textTime.text = getTimeElapsedFormattedString()
 
