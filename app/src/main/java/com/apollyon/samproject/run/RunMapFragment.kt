@@ -2,6 +2,7 @@ package com.apollyon.samproject.run
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
@@ -25,6 +26,7 @@ import com.apollyon.samproject.PermissionUtils.requestPermission
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunMapBinding
 import com.apollyon.samproject.datastruct.RunningSession
+import com.apollyon.samproject.services.RunService
 import com.google.android.gms.location.*
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
@@ -33,6 +35,8 @@ import com.google.android.libraries.maps.SupportMapFragment
 import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.PolylineOptions
 import com.google.maps.android.SphericalUtil
+import kotlinx.android.synthetic.main.fragment_run_map.*
+import kotlinx.android.synthetic.main.fragment_run_map.view.*
 
 class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     GoogleMap.OnMyLocationClickListener, OnMapReadyCallback,
@@ -52,15 +56,10 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
     private lateinit var locationCallback: LocationCallback
     private var requestingLocationUpdates : Boolean = true
 
-    //map screenshot
-    private lateinit var mapScreenshot : Bitmap
-
     //km and time
+    private var runPaused : Boolean = false
     private var km : Double = 0.00
     private lateinit var lastLocation: Location
-
-    private var startTime: Long = SystemClock.elapsedRealtime()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,22 +69,7 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         polylineOptions = PolylineOptions()
-
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                for (location in locationResult.locations){
-                    val newPoint = LatLng(location.latitude, location.longitude)
-                    updateDistance(LatLng(lastLocation.latitude, lastLocation.longitude), newPoint)
-                    lastLocation = location
-                    polylineOptions.add(newPoint).geodesic(true).color(R.color.primaryColor)
-                    map.animateCamera(CameraUpdateFactory.newLatLng(newPoint))
-                    map.addPolyline(polylineOptions)
-                }
-            }
-        }
 
         return binding.root
     }
@@ -93,15 +77,60 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
+
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
 
         binding.kmText.text = "km: 0.00"
+
+        binding.startButt.setOnClickListener {
+            binding.chronometer.start()
+            sendCommandToService("ACTION_START_OR_RESUME_SERVICE")
+            runPaused = false
+        }
+
+        binding.pauseButt.setOnClickListener {
+            binding.chronometer.stop()
+            runPaused = true
+        }
 
         binding.stopButt.setOnClickListener{
             binding.chronometer.stop()
             map.snapshot(this)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView?.onResume()
+        if (permissionDenied) {
+            permissionDenied = false
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView?.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView?.onStop()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView?.onLowMemory()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
     }
 
     override fun onMyLocationClick(location : Location) {
@@ -130,40 +159,11 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         }
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        if (permissionDenied) {
-            permissionDenied = false
-        }
-        if(requestingLocationUpdates) startLocationUpdates()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopLocationUpdates()
-    }
-
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        enableMyLocation()
-    }
-
     private fun enableMyLocation() {
         if (!::map.isInitialized) return
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
-                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                    map.isMyLocationEnabled = true
-                    lastLocation = location
-                    binding.kmText.text = String.format("km: %.2f", km)
-                    binding.chronometer.start()
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude),17f))
-                }
+                map.isMyLocationEnabled = true
         } else {
             // Permission to access the location is missing. Show rationale and request permission
             requestPermission(
@@ -173,24 +173,11 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
         }
     }
 
-    private fun createLocationRequest(): LocationRequest {
-        return LocationRequest.create().apply {
-            interval = 6000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-    }
-
     fun updateDistance(oldPoint: LatLng, newPoint : LatLng){
-        km += (SphericalUtil.computeDistanceBetween(oldPoint, newPoint) / 1000)
-        binding.kmText.text = String.format("km: %.2f", km)
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun startLocationUpdates() {
-        fusedLocationClient.requestLocationUpdates(createLocationRequest(),
-            locationCallback,
-            Looper.getMainLooper())
+        if(!runPaused) {
+            km += (SphericalUtil.computeDistanceBetween(oldPoint, newPoint) / 1000)
+            binding.kmText.text = String.format("km: %.2f", km)
+        }
     }
 
     override fun onSnapshotReady(bitmap: Bitmap?) {
@@ -199,5 +186,19 @@ class RunMapFragment : Fragment(), GoogleMap.OnMyLocationButtonClickListener,
                 RunningSession()
             ))
         }
+    }
+
+    private fun sendCommandToService(action: String){
+        Intent(requireContext(), RunService::class.java).also {
+            it.action = action
+            requireContext().startService(it)
+        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        if (googleMap != null) {
+            map = googleMap
+        }
+        enableMyLocation()
     }
 }
