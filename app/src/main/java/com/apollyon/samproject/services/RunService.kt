@@ -13,13 +13,11 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.apollyon.samproject.MainActivity
 import com.apollyon.samproject.R
-import com.apollyon.samproject.RunActivity
 import com.apollyon.samproject.run.RunUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -147,8 +145,9 @@ class RunService : LifecycleService() {
                 }
                 "ACTION_STOP_SERVICE" -> {
                     stopSelf()
+                    postInitialValues()
                 }
-                else -> Log.i("AAAAAAAAAAAAA","unknown action")
+                else -> Log.i("Debug","unknown action")
             }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -256,8 +255,9 @@ class RunService : LifecycleService() {
     private fun getRunActivityPendingIntent() = PendingIntent.getActivity(
         this,
         0,
-        Intent(this, RunActivity::class.java).also {
+        Intent(this, MainActivity::class.java).also {
             it.action = "ACTION_SHOW_RUN_MAP_FRAGMENT"
+
         },
         FLAG_UPDATE_CURRENT
     )

@@ -11,8 +11,7 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment2"
-            app:destination="@id/registerFragment"
-            app:popUpTo="@id/loginFragment" />
+            app:destination="@id/registerFragment" />
         <action
             android:id="@+id/action_loginFragment_to_mainActivity"
             app:destination="@id/mainActivity"
@@ -26,8 +25,7 @@
         <action
             android:id="@+id/action_loginFragment_to_forgotFragment"
             app:destination="@id/forgotFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/loginFragment" />
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"

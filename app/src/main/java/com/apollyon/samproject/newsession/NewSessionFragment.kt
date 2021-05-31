@@ -1,16 +1,13 @@
 package com.apollyon.samproject.newsession
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.apollyon.samproject.MainViewModel
@@ -18,8 +15,6 @@ import com.apollyon.samproject.R
 import com.apollyon.samproject.UI.Adapter
 import com.apollyon.samproject.UI.TrainingMode
 import com.apollyon.samproject.databinding.FragmentNewSessionBinding
-import com.apollyon.samproject.datastruct.FetchRunningSession
-
 
 class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
 
@@ -55,7 +50,7 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
         viewPager.setPadding(130, 0, 130, 0)
 
         binding.buttonStart.setOnClickListener {
-            this.findNavController().navigate(NewSessionFragmentDirections.actionNewSessionToRunActivity())
+            this.findNavController().navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment())
         }
 
         viewPager.addOnPageChangeListener(this)
@@ -75,9 +70,6 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
     override fun onPageScrollStateChanged(state: Int) {
             ;
     }
-
-
-
 
 
 }

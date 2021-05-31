@@ -10,8 +10,6 @@ class SessionViewModel(
 
     private var viewModelJob = Job()
 
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()

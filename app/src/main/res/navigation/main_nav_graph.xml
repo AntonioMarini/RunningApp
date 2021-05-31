@@ -16,10 +16,12 @@
         android:name="com.apollyon.samproject.newsession.NewSessionFragment"
         android:label="NewSessionFragment" >
         <action
-            android:id="@+id/action_new_session_to_runActivity"
-            app:destination="@id/runActivity"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/home" />
+            android:id="@+id/action_new_session_to_runMapFragment"
+            app:destination="@id/runMapFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/home"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@id/profile"
@@ -52,9 +54,35 @@
         tools:layout="@layout/activity_auth"
         android:name="com.apollyon.samproject.AuthActivity"
         android:label="AuthActivity" />
-    <activity
-        android:id="@+id/runActivity"
-        tools:layout="@layout/activity_run"
-        android:name="com.apollyon.samproject.RunActivity"
-        android:label="RunActivity" />
+    <fragment
+        android:id="@+id/runMapFragment"
+        android:name="com.apollyon.samproject.run.RunMapFragment"
+        android:label="RunMapFragment"
+        tools:layout="@layout/fragment_run_map">
+        <action
+            android:id="@+id/action_runMapFragment_to_runResultsFragment"
+            app:destination="@id/runResultsFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/runMapFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/runResultsFragment"
+        android:name="com.apollyon.samproject.run.RunResultsFragment"
+        android:label="RunResultsFragment"
+        tools:layout="@layout/fragment_run_results">
+        <argument
+            android:name="session"
+            app:argType="com.apollyon.samproject.datastruct.RunningSession"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_runResultsFragment_to_home"
+            app:destination="@id/home"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/home"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="mapScreenBitmap"
+            app:argType="android.graphics.Bitmap" />
+    </fragment>
 </navigation>

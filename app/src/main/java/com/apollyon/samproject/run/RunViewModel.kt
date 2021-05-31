@@ -10,5 +10,9 @@ class RunViewModel(dataSource : RunningSessionsDao?) : ViewModel() {
 
     // uso coroutines per inserire sessione nel database non nel run results fragment
 
+    override fun onCleared() {
+        super.onCleared()
+    }
+
 
 }

@@ -6,9 +6,9 @@
   <color name="color3">#00BCD4</color>
   <color name="color4">#FFEB3B</color>
 
-  <color name="primaryColor">#ff3d00</color>
-  <color name="primaryLightColor">#ff7539</color>
-  <color name="primaryDarkColor">#c30000</color>
+  <color name="primaryColor">#673AB7</color>
+  <color name="primaryLightColor">#905FE8</color>
+  <color name="primaryDarkColor">#6200C3</color>
   <color name="secondaryColor">#455a64</color>
   <color name="secondaryLightColor">#718792</color>
   <color name="secondaryDarkColor">#1c313a</color>

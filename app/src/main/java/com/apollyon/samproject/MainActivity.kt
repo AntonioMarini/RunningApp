@@ -3,6 +3,7 @@ package com.apollyon.samproject
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.profileImageDownloaded.observe(this, Observer {uri ->
             changePicture(uri)
         })
+
+        Log.i("apollyon","ADWOIHWAHDHWAHDwaIUDHwaiuhd")
 
     }
 
