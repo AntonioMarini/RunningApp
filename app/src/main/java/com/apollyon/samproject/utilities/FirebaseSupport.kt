@@ -1,4 +1,4 @@
-package com.apollyon.samproject.datastruct
+package com.apollyon.samproject.utilities
 
 import android.content.ContentValues
 import android.net.Uri

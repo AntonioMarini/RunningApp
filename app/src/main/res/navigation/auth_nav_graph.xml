@@ -41,7 +41,7 @@
     </fragment>
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.apollyon.samproject.MainActivity"
+        android:name="com.apollyon.samproject.ui.activities.MainActivity"
         android:label="MainActivity"
         tools:layout="@layout/activity_main"/>
     <fragment
@@ -51,7 +51,7 @@
         tools:layout="@layout/fragment_forgot"/>
     <activity
         android:id="@+id/authActivity"
-        android:name="com.apollyon.samproject.AuthActivity"
+        android:name="com.apollyon.samproject.ui.activities.AuthActivity"
         android:label="AuthActivity"
         tools:layout="@layout/activity_auth"/>
 </navigation>

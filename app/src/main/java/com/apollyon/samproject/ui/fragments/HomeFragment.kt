@@ -1,4 +1,4 @@
-package com.apollyon.samproject.home
+package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import com.apollyon.samproject.MainViewModel
+import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentHomeBinding
 
@@ -26,13 +26,6 @@ class HomeFragment : Fragment() {
 
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
-
-
-
-
-
-
-
 
         return binding.root
     }

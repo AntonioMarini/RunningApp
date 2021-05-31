@@ -1,4 +1,4 @@
-package com.apollyon.samproject.datastruct
+package com.apollyon.samproject.data
 
 import android.graphics.Bitmap
 import android.os.Parcelable
@@ -15,7 +15,7 @@ data class RunningSession(
         val sessionID : Long? = null,
 
         @ColumnInfo(name = "user_id")
-        val uid : String? = null,
+        var uid : String? = null,
 
         @ColumnInfo(name = "map_screen")
         var map_screen: Bitmap? = null,

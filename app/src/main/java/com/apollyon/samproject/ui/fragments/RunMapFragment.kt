@@ -1,4 +1,4 @@
-package com.apollyon.samproject.run
+package com.apollyon.samproject.ui.fragments
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,12 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunMapBinding
-import com.apollyon.samproject.datastruct.RunningSession
+import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.services.RunService
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap

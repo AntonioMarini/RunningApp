@@ -1,4 +1,4 @@
-package com.apollyon.samproject.run
+package com.apollyon.samproject.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunResultsBinding
-import com.apollyon.samproject.datastruct.RunningSession
+import com.apollyon.samproject.data.RunningSession
 import java.text.SimpleDateFormat
 
 class RunResultsFragment : Fragment(){
@@ -43,7 +43,6 @@ class RunResultsFragment : Fragment(){
         binding.button.setOnClickListener{
             this.findNavController().navigate(RunResultsFragmentDirections.actionRunResultsFragmentToHome())
         }
-
     }
 
     @SuppressLint("SimpleDateFormat")

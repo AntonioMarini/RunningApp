@@ -1,32 +1,25 @@
-package com.apollyon.samproject
+package com.apollyon.samproject.viewmodels
 
-import android.app.Application
 import android.content.ContentValues
-import android.content.ContentValues.TAG
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.apollyon.samproject.datastruct.FirebaseSupport
-import com.apollyon.samproject.datastruct.RunningSessionsDao
-import com.apollyon.samproject.datastruct.User
-import com.google.firebase.auth.FirebaseAuth
+import com.apollyon.samproject.utilities.FirebaseSupport
+import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.data.RunningSessionsDao
+import com.apollyon.samproject.data.User
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
-import java.io.ByteArrayOutputStream
+import kotlinx.coroutines.withContext
 
 class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
@@ -43,6 +36,10 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     private val storageReference = FirebaseStorage.getInstance().reference
     val authUser: FirebaseUser? = firebaseSupport.currentUser
+
+    //job per coroutines
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     private val userListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -85,6 +82,21 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
         }
     }
 
+    // comunicazione col database -> uso coroutines
+
+    /**
+     * insert session in the database
+     * @param session session to add
+     */
+    suspend fun insertSession(session: RunningSession){
+
+        // insert missing data in the session like the user id
+        session.uid = _user.value?.uid
+
+        withContext(IO){
+            database?.insert(session)
+        }
+    }
 
 
 }

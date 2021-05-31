@@ -1,4 +1,4 @@
-package com.apollyon.samproject.home
+package com.apollyon.samproject.viewmodels
 
 import androidx.lifecycle.ViewModel
 

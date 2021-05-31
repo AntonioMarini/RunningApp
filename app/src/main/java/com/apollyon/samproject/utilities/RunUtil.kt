@@ -1,8 +1,10 @@
-package com.apollyon.samproject.run
+package com.apollyon.samproject.utilities
 
 import java.util.concurrent.TimeUnit
 
-//contains utility methods for running tracker
+/**
+ * Class that contains utility methods for running
+ */
 class RunUtil {
 
     fun getFormattedTime(ms:Long, includeMillis: Boolean = false): String{
@@ -27,6 +29,14 @@ class RunUtil {
                 "${if(minutes<10) "0" else ""}$minutes:"+
                 "${if(seconds<10) "0" else ""}$seconds:"+
                 "${if(msCopy<10) "0" else ""}$msCopy"
+    }
+
+    fun calculateCalories(){
+
+    }
+
+    fun calculateAvgSpeedKmh(){
+
     }
 
 

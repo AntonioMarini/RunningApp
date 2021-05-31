@@ -1,4 +1,4 @@
-package com.apollyon.samproject.newsession
+package com.apollyon.samproject.viewmodels
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

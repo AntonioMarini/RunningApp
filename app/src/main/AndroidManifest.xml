@@ -33,9 +33,9 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".RunActivity" android:launchMode="singleInstance" />
-        <activity android:name=".MainActivity" android:launchMode="singleInstance"></activity>
+        <activity android:name=".ui.activities.MainActivity" android:launchMode="singleInstance"></activity>
         <activity
-            android:name=".AuthActivity"
+            android:name=".ui.activities.AuthActivity"
             android:theme="@style/Theme.SAMproject"
             android:launchMode="singleInstance">
             <intent-filter>

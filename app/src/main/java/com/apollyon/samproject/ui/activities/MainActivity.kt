@@ -1,4 +1,4 @@
-package com.apollyon.samproject
+package com.apollyon.samproject.ui.activities
 
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -9,8 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import com.apollyon.samproject.datastruct.RunningDatabase
-import com.apollyon.samproject.home.HomeFragment
+import com.apollyon.samproject.viewmodels.MainViewModel
+import com.apollyon.samproject.viewmodels.MainViewModelFactory
+import com.apollyon.samproject.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -36,8 +37,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.profileImageDownloaded.observe(this, Observer {uri ->
             changePicture(uri)
         })
-
-        Log.i("apollyon","ADWOIHWAHDHWAHDwaIUDHwaiuhd")
 
     }
 

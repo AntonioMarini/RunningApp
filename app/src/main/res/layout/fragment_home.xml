@@ -5,12 +5,12 @@
     <data>
         <variable
             name="mainViewModel"
-            type="com.apollyon.samproject.MainViewModel" />
+            type="com.apollyon.samproject.viewmodels.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".ui.activities.MainActivity">
 
 
 

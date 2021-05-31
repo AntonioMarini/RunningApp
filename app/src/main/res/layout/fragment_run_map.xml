@@ -7,7 +7,7 @@
     <data>
         <variable
             name="runViewModel"
-            type="com.apollyon.samproject.run.RunViewModel" />
+            type="com.apollyon.samproject.viewmodels.RunViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"

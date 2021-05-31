@@ -1,8 +1,8 @@
-package com.apollyon.samproject.run
+package com.apollyon.samproject.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.apollyon.samproject.datastruct.RunningSession
-import com.apollyon.samproject.datastruct.RunningSessionsDao
+import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.data.RunningSessionsDao
 
 lateinit var runningSession : RunningSession
 

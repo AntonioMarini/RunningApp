@@ -16,9 +16,9 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.apollyon.samproject.MainActivity
+import com.apollyon.samproject.ui.activities.MainActivity
 import com.apollyon.samproject.R
-import com.apollyon.samproject.run.RunUtil
+import com.apollyon.samproject.utilities.RunUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

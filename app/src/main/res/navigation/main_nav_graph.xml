@@ -7,13 +7,13 @@
     app:startDestination="@id/home">
     <fragment
         android:id="@id/home"
-        android:name="com.apollyon.samproject.home.HomeFragment"
+        android:name="com.apollyon.samproject.ui.fragments.HomeFragment"
         tools:layout="@layout/fragment_home"
         android:label="HomeFragment" />
     <fragment
         android:id="@id/new_session"
         tools:layout="@layout/fragment_new_session"
-        android:name="com.apollyon.samproject.newsession.NewSessionFragment"
+        android:name="com.apollyon.samproject.ui.fragments.NewSessionFragment"
         android:label="NewSessionFragment" >
         <action
             android:id="@+id/action_new_session_to_runMapFragment"
@@ -26,7 +26,7 @@
     <fragment
         android:id="@id/profile"
         tools:layout="@layout/fragment_profile"
-        android:name="com.apollyon.samproject.profile.ProfileFragment"
+        android:name="com.apollyon.samproject.ui.fragments.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profile_to_authActivity"
@@ -37,26 +37,26 @@
     <fragment
         android:id="@id/trainer"
         tools:layout="@layout/fragment_trainer"
-        android:name="com.apollyon.samproject.trainer.TrainerFragment"
+        android:name="com.apollyon.samproject.ui.fragments.TrainerFragment"
         android:label="TrainerFragment" />
     <fragment
         android:id="@id/stats"
         tools:layout="@layout/fragment_stats"
-        android:name="com.apollyon.samproject.stats.StatsFragment"
+        android:name="com.apollyon.samproject.ui.fragments.StatsFragment"
         android:label="StatsFragment" />
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.apollyon.samproject.MainActivity"
+        android:name="com.apollyon.samproject.ui.activities.MainActivity"
         android:label="MainActivity"
         tools:layout="@layout/activity_main"/>
     <activity
         android:id="@+id/authActivity"
         tools:layout="@layout/activity_auth"
-        android:name="com.apollyon.samproject.AuthActivity"
+        android:name="com.apollyon.samproject.ui.activities.AuthActivity"
         android:label="AuthActivity" />
     <fragment
         android:id="@+id/runMapFragment"
-        android:name="com.apollyon.samproject.run.RunMapFragment"
+        android:name="com.apollyon.samproject.ui.fragments.RunMapFragment"
         android:label="RunMapFragment"
         tools:layout="@layout/fragment_run_map">
         <action
@@ -68,12 +68,12 @@
     </fragment>
     <fragment
         android:id="@+id/runResultsFragment"
-        android:name="com.apollyon.samproject.run.RunResultsFragment"
+        android:name="com.apollyon.samproject.ui.fragments.RunResultsFragment"
         android:label="RunResultsFragment"
         tools:layout="@layout/fragment_run_results">
         <argument
             android:name="session"
-            app:argType="com.apollyon.samproject.datastruct.RunningSession"
+            app:argType="com.apollyon.samproject.data.RunningSession"
             app:nullable="true" />
         <action
             android:id="@+id/action_runResultsFragment_to_home"

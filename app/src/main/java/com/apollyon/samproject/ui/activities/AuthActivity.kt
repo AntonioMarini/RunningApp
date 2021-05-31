@@ -1,9 +1,8 @@
-package com.apollyon.samproject
+package com.apollyon.samproject.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.apollyon.samproject.R
 
 class AuthActivity : AppCompatActivity(){
 

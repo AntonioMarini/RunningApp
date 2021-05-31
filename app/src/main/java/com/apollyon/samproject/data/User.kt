@@ -1,4 +1,4 @@
-package com.apollyon.samproject.datastruct
+package com.apollyon.samproject.data
 
 import com.google.firebase.database.IgnoreExtraProperties
 

@@ -1,4 +1,4 @@
-package com.apollyon.samproject.newsession
+package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +10,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
-import com.apollyon.samproject.MainViewModel
+import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.UI.Adapter
-import com.apollyon.samproject.UI.TrainingMode
+import com.apollyon.samproject.ui.Adapter
+import com.apollyon.samproject.data.TrainingMode
 import com.apollyon.samproject.databinding.FragmentNewSessionBinding
+import com.apollyon.samproject.viewmodels.SessionViewModel
 
 class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
 

@@ -1,4 +1,4 @@
-package com.apollyon.samproject.UI
+package com.apollyon.samproject.data
 
 import com.apollyon.samproject.R
 

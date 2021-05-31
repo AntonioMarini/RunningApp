@@ -1,10 +1,8 @@
-package com.apollyon.samproject
+package com.apollyon.samproject.viewmodels
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.apollyon.samproject.datastruct.RunningSessionsDao
-import com.apollyon.samproject.newsession.SessionViewModel
+import com.apollyon.samproject.data.RunningSessionsDao
 import java.lang.IllegalArgumentException
 
 class MainViewModelFactory (private val dataSource: RunningSessionsDao? ) : ViewModelProvider.Factory {

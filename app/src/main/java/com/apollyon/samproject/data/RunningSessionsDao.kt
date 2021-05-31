@@ -1,4 +1,4 @@
-package com.apollyon.samproject.datastruct
+package com.apollyon.samproject.data
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

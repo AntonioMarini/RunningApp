@@ -1,15 +1,9 @@
 package com.apollyon.samproject.auth
 
-import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.apollyon.samproject.MainActivity
-import com.apollyon.samproject.R
-import com.apollyon.samproject.datastruct.User
+import com.apollyon.samproject.data.User
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth

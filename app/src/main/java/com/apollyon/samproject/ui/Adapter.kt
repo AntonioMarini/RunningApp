@@ -1,4 +1,4 @@
-package com.apollyon.samproject.UI
+package com.apollyon.samproject.ui
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,10 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.PagerAdapter
 import com.apollyon.samproject.R
+import com.apollyon.samproject.data.TrainingMode
 
 class Adapter(
-        private var models: List<TrainingMode>,
-        private var context: Context?
+    private var models: List<TrainingMode>,
+    private var context: Context?
 ) : PagerAdapter() {
 
 
