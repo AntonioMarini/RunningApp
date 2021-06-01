@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.ui.Adapter
+import com.apollyon.samproject.ui.TrainingsAdapter
 import com.apollyon.samproject.data.TrainingMode
 import com.apollyon.samproject.databinding.FragmentNewSessionBinding
 import com.apollyon.samproject.viewmodels.SessionViewModel
@@ -20,7 +20,7 @@ import com.apollyon.samproject.viewmodels.SessionViewModel
 class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
 
     private lateinit var viewPager: ViewPager
-    private lateinit var adapter: Adapter
+    private lateinit var trainingsAdapter: TrainingsAdapter
 
     private val mainViewModel : MainViewModel by activityViewModels()
 
@@ -44,10 +44,10 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener{
         trainingModes.add(TrainingMode(R.drawable.ghepardo, "HIIT Running", "High-intensity interval training running consists of intervals of high intensive run with lower intensive intervals"))
         trainingModes.add(TrainingMode(R.drawable.falco, "Cycling", "Bike is nice"))
 
-        adapter = Adapter(trainingModes, context)
+        trainingsAdapter = TrainingsAdapter(trainingModes, context)
 
         viewPager = binding.pager
-        viewPager.adapter = adapter
+        viewPager.adapter = trainingsAdapter
         viewPager.setPadding(130, 0, 130, 0)
 
         binding.buttonStart.setOnClickListener {

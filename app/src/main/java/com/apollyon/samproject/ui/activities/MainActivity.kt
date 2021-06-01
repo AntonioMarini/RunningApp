@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.apollyon.samproject.R
+import com.apollyon.samproject.data.RunningDatabase
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,9 +25,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //val dataSource = RunningDatabase.getInstance(application).runningSessionDao
+        val dataSource = RunningDatabase.getInstance(application).runningSessionDao
 
-        viewModel = ViewModelProvider(this , MainViewModelFactory(null)).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
 
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
         if (navHostFragment != null) NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.navController)
@@ -39,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-
 
     private fun changePicture(uri : Uri?){
         val imageView = findViewById<ImageView>(R.id.profile_image)

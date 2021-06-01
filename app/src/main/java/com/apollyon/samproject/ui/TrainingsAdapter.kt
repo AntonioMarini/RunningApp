@@ -10,12 +10,10 @@ import androidx.viewpager.widget.PagerAdapter
 import com.apollyon.samproject.R
 import com.apollyon.samproject.data.TrainingMode
 
-class Adapter(
+class TrainingsAdapter(
     private var models: List<TrainingMode>,
     private var context: Context?
 ) : PagerAdapter() {
-
-
 
     private lateinit var layoutInflater: LayoutInflater
 
@@ -30,7 +28,7 @@ class Adapter(
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         layoutInflater = LayoutInflater.from(context)
-        val view = layoutInflater.inflate(R.layout.item, container, false)
+        val view = layoutInflater.inflate(R.layout.training_card, container, false)
 
         val imageView: ImageView
         val titleView: TextView

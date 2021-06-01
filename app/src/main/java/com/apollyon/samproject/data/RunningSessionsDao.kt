@@ -18,6 +18,9 @@ interface RunningSessionsDao {
     @Query("select * from running_sessions where sessionID = :sessionID and user_id = :uid")
     fun getSession(sessionID: Long, uid: String?) : RunningSession
 
+    @Query("select * from running_sessions order by timestamp desc")
+    fun getAllRuns() : LiveData<List<RunningSession>>
+
     @Query("select * from running_sessions  where user_id = :uid order by timestamp desc")
     fun getAllRunsByDate(uid: String?) : LiveData<List<RunningSession>>
 

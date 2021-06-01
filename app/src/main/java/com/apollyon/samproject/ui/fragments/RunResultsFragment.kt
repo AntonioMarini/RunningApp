@@ -7,14 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunResultsBinding
 import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.viewmodels.MainViewModel
 import java.text.SimpleDateFormat
 
 class RunResultsFragment : Fragment(){
 
+
+    private val mainViewModel : MainViewModel by activityViewModels()
     private lateinit var binding: FragmentRunResultsBinding
     private lateinit var session : RunningSession
 
@@ -32,7 +36,7 @@ class RunResultsFragment : Fragment(){
 
         binding.textKm.text = String.format("Distance: %.2f km", km)
         binding.textTime.text = getTimeElapsedFormattedString()
-        binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
+        //binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
 
         return binding.root
     }
@@ -41,6 +45,7 @@ class RunResultsFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.button.setOnClickListener{
+            mainViewModel.insertSession(session)
             this.findNavController().navigate(RunResultsFragmentDirections.actionRunResultsFragmentToHome())
         }
     }

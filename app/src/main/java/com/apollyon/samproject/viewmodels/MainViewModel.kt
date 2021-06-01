@@ -15,11 +15,8 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.withContext
 
 class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
@@ -36,6 +33,9 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     private val storageReference = FirebaseStorage.getInstance().reference
     val authUser: FirebaseUser? = firebaseSupport.currentUser
+
+    // per la recyclerview
+    val runSessions = database!!.getAllRunsByDate(authUser?.uid)
 
     //job per coroutines
     private var viewModelJob = Job()
@@ -84,18 +84,28 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     // comunicazione col database -> uso coroutines
 
+    fun insertSession(session : RunningSession){
+        uiScope.launch {
+            insert(session)
+        }
+    }
+
     /**
      * insert session in the database
      * @param session session to add
      */
-    suspend fun insertSession(session: RunningSession){
-
+    private suspend  fun insert(session: RunningSession){
         // insert missing data in the session like the user id
         session.uid = _user.value?.uid
 
         withContext(IO){
             database?.insert(session)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
 
