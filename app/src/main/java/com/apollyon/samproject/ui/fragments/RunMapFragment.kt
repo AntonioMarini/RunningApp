@@ -1,14 +1,19 @@
 package com.apollyon.samproject.ui.fragments
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -49,11 +54,12 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
 
+
+
         polylineOptions = PolylineOptions()
 
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -213,8 +219,6 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
         }
     }
 
-
-
     override fun onSnapshotReady(bitmap: Bitmap?) {
         // navigate to the RunResults Fragment
         if (bitmap != null) {
@@ -223,6 +227,8 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
             ))
         }
     }
+
+
 
 
 }

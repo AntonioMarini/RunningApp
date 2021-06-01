@@ -31,23 +31,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * A Foreground Service that holds locations data, time, distance,
+ * to be shared with the app. It creates a notification
+ */
 class RunService : LifecycleService() {
 
     private var isFirstRun = true
 
+    //used to get location of the user
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val timeRunInSeconds = MutableLiveData<Long>()
 
+    // used to create(build) a new notification or update existing one
     private lateinit var currentNotificationBuilder: NotificationCompat.Builder
 
+    // livedata that the RunFragment observe
     companion object{
+        const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
+        const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
+        const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
+
         val timeRunInMillis = MutableLiveData<Long>()
         val distanceInMeters = MutableLiveData<Int>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<MutableList<MutableList<LatLng>>>()
     }
 
+    // initializes the livedata
     private fun postInitialValues(){
         isTracking.postValue(false)
         pathPoints.postValue(mutableListOf())
@@ -56,11 +68,18 @@ class RunService : LifecycleService() {
         distanceInMeters.postValue(0)
     }
 
+    /**
+     *  Create a new empty polyline in the list of polyline,
+     *  a polyline is a mutable list of Locations.
+      */
     private fun addEmptyPolyline() = pathPoints.value?.apply {
         add(mutableListOf()) // add an empty list
-        pathPoints.postValue(this)
-    } ?: pathPoints.postValue(mutableListOf(mutableListOf()))
+        pathPoints.postValue(this) // update the value of the livedata (it will be observed by the fragment)
+    } ?: pathPoints.postValue(mutableListOf(mutableListOf())) // if is null create a new (mutable) list of list of points
 
+    /**
+     *
+     */
     private fun addPathPoint(location: Location?){
         location?.let{
             val pos = LatLng(location.latitude, location.longitude)
@@ -131,19 +150,18 @@ class RunService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let{
             when(it.action){
-                "ACTION_START_OR_RESUME_SERVICE" -> {
+                ACTION_START_OR_RESUME_SERVICE -> {
                     if(isFirstRun){
                         startForegroundService()
                         isFirstRun = false
                     }else{
-                        Log.i("SERVICE","resuming service")
                         startTimer() //resume
                     }
                 }
-                "ACTION_PAUSE_SERVICE" -> {
+                ACTION_PAUSE_SERVICE -> {
                     pauseService()
                 }
-                "ACTION_STOP_SERVICE" -> {
+                ACTION_STOP_SERVICE -> {
                     stopSelf()
                     postInitialValues()
                 }
@@ -154,11 +172,16 @@ class RunService : LifecycleService() {
     }
 
     private var isTimerEnabled = false
-    private var lapTime = 0L
-    private var runTimeCounter = 0L
+    private var lapTime = 0L // time counter between start and pause (lap)
+    private var runTimeCounter = 0L // total time counter,used to keep the time after pause
     private var timeStarted = 0L
     private var lastSecondTimestamp = 0L
 
+    /**
+     * Starts the timer, updates the livedata to inform the observer that the service
+     * is now tracking, it uses coroutine (main dispatcher) to update the timer while the
+     * service is tracking.
+     */
     private fun startTimer(){
         addEmptyPolyline()
         isTracking.postValue(true)
@@ -181,7 +204,11 @@ class RunService : LifecycleService() {
         }
     }
 
+    /**
+     * Updates the distance livedata using the two last points.
+     */
     private fun updateDistance(){
+        // if the last polyline contains at least two points
         if(pathPoints.value!!.isNotEmpty() && pathPoints.value!!.last().size > 1) {
             val lastPoint = pathPoints.value!!.last().last()
             val preLastPoint = pathPoints.value!!.last()[pathPoints.value!!.last().size - 2]
