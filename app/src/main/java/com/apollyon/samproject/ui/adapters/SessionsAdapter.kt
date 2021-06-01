@@ -1,4 +1,4 @@
-package com.apollyon.samproject.ui
+package com.apollyon.samproject.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View

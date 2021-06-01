@@ -11,9 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.databinding.FragmentHomeBinding
-import com.apollyon.samproject.ui.SessionsAdapter
+import com.apollyon.samproject.ui.adapters.SessionsAdapter
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {

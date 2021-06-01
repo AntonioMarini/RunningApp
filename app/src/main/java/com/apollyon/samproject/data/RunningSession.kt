@@ -7,6 +7,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * class that represents an entity of run for the room database component
+ *
+ */
 @Parcelize
 @Entity(tableName = "running_sessions")
 data class RunningSession(

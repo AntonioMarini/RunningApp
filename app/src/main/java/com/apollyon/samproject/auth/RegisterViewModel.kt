@@ -12,49 +12,43 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+/**
+ * Viewmodel that holds all the logic to register a new user, add it to the firebase auth,
+ * and the firebase realtime, wich stores info about the user like the username, age, etc..
+ * This viewmodel contains livedata that the RegisterFragment observe.
+ */
 class RegisterViewModel : ViewModel(){
 
     private var database : FirebaseDatabase = Firebase.database
-    private var auth : FirebaseAuth? = null
+    private var auth : FirebaseAuth? = FirebaseAuth.getInstance()
     private lateinit var firebaseUser : FirebaseUser
 
-    // encapsulated livedata fields
+    //well encapsulated livedata fields that contains the data of the form
+    // they also prevent to lose the data when the fragment associated is destroyed
+    // (e.g. when the screen is rotated)
 
     private val _userAdded = MutableLiveData<Boolean>()
-    val userAdded : LiveData<Boolean>
-        get() = _userAdded
+    val userAdded : LiveData<Boolean> get() = _userAdded
 
-    private val _email = MutableLiveData<String>("")
-    val email : LiveData<String>
-        get() = _email
+    private val _email = MutableLiveData("")
+    val email : LiveData<String> get() = _email
 
-    private val _username = MutableLiveData<String>("")
-    val username : LiveData<String>
-        get() = _username
+    private val _username = MutableLiveData("")
+    val username : LiveData<String> get() = _username
 
-    private val _age = MutableLiveData<Int>(18)
-    val age : LiveData<Int>
-        get() = _age
+    private val _age = MutableLiveData("")
+    val age : LiveData<String> get() = _age
 
-    private val _password = MutableLiveData<String>("")
-    val password : LiveData<String>
-        get() = _password
+    private val _password = MutableLiveData("")
+    val password : LiveData<String> get() = _password
 
-    private val _retypedPassword = MutableLiveData<String>("")
-    val retypedPassword : LiveData<String>
-        get() = _retypedPassword
+    private val _retypedPassword = MutableLiveData("")
+    val retypedPassword : LiveData<String> get() = _retypedPassword
 
-    //constructor
-
-    init{
-        auth = FirebaseAuth.getInstance()
-        _username.value = ""
-        _email.value = ""
-        _password.value = ""
-        _retypedPassword.value = ""
-    }
-
-    fun setData(email : String, username : String, age : Int, password: String, retypedPassword: String){
+    /**
+     * set the livedata of the viewmodel
+     */
+    fun setData(email : String = "", username : String = "", age : String = "" , password: String = "", retypedPassword: String = ""){
         _email.value =  email
         _username.value = username
         _age.value = age
@@ -62,17 +56,20 @@ class RegisterViewModel : ViewModel(){
         _retypedPassword.value = retypedPassword
     }
 
-    // returns true if user has been succesfully signed up in firebase, false o/w
+    /**
+     * Calls the firebase auth api to register the user.
+     * @return true if user has been successfully signed up in firebase, false o/w
+      */
     fun registerUser() {
-
-        auth?.createUserWithEmailAndPassword(_email.value,_password.value)
+        auth?.createUserWithEmailAndPassword(_email.value.toString(),_password.value.toString())
             ?.addOnCompleteListener( OnCompleteListener<AuthResult> { task ->
-                //if the registration is succesfully done
+                //if the registration is successful
                 if (task.isSuccessful){
                     firebaseUser = task.result!!.user!!
-                    //val defaultUri = Uri.parse("android.resource://com.apollyon.samproject/drawable/raccoon.jpg");
-                    val user : User = User(firebaseUser.uid, _email.value, _username.value, _age.value)
-                    addUser(user, firebaseUser)
+                    val user : User = User(firebaseUser.uid, _email.value, _username.value,
+                        _age.value?.toInt()
+                    )
+                    addUser(user, firebaseUser.uid)
                     _userAdded.value = true
                 }else{
                     _userAdded.value = false
@@ -80,10 +77,16 @@ class RegisterViewModel : ViewModel(){
             })
     }
 
-    private fun addUser(user: User, firebaseUser: FirebaseUser){
+    /**
+     * Add the user in the firebase realtime database (for data associated with the user)
+     * @param user The user to be added.
+     * @param firebaseUserUid The uid to access the user data
+     */
+    private fun addUser(user: User, firebaseUserUid: String){
         val myRef = database.getReference("users")
-        myRef.child(firebaseUser.uid).setValue(user)
+        myRef.child(firebaseUserUid).setValue(user)
     }
+
 
     fun getFirebaseUser() : FirebaseUser{
         return firebaseUser

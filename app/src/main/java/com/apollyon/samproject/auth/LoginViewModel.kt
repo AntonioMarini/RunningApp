@@ -28,6 +28,9 @@ class LoginViewModel : ViewModel(){
         _password.value = ""
     }
 
+    /**
+     * Use Firebase auth to login.
+     */
     fun login() {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_email.value,_password.value)
                 .addOnCompleteListener { task ->
@@ -35,7 +38,7 @@ class LoginViewModel : ViewModel(){
                 }
     }
 
-    fun setData(email : String, password: String){
+    fun setData(email : String = "", password: String = ""){
         _email.value = email
         _password.value = password
     }

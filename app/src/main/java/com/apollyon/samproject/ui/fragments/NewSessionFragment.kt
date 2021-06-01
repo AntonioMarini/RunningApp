@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager.widget.ViewPager
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.ui.TrainingsAdapter
+import com.apollyon.samproject.ui.adapters.TrainingsAdapter
 import com.apollyon.samproject.data.TrainingMode
 import com.apollyon.samproject.databinding.FragmentNewSessionBinding
 import com.apollyon.samproject.viewmodels.SessionViewModel

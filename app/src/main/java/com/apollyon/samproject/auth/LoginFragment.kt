@@ -14,7 +14,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentLoginBinding
+import kotlinx.android.synthetic.main.fragment_forgot.*
+import kotlinx.android.synthetic.main.fragment_login.*
 
+
+/**
+ * LoginFragment contains the ui logic for the process of login
+ * through Firebase Authentication (email and password)
+ */
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel : LoginViewModel
@@ -34,6 +41,7 @@ class LoginFragment : Fragment() {
 
         val user = viewModel.auth.currentUser
 
+        // AUTOLOGIN
         if (user != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             this.findNavController().navigate(
@@ -42,10 +50,16 @@ class LoginFragment : Fragment() {
             requireActivity().finish()
         }
 
-       binding.forgetPassword.setOnClickListener {
-           this.findNavController().navigate(
-               LoginFragmentDirections.actionLoginFragmentToForgotFragment()
-           )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.forgetPassword.setOnClickListener {
+            this.findNavController().navigate(
+                LoginFragmentDirections.actionLoginFragmentToForgotFragment()
+            )
         }
 
         binding.registrateLabel.setOnClickListener {
@@ -74,16 +88,12 @@ class LoginFragment : Fragment() {
         })
 
 
-        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-    }
-
-
+    /**
+     * Validates the form.
+     * @return true if the form is correct, false o/w
+     */
     private fun validateForm(): Boolean{
 
         val emailEdit = binding.emailEditLogin
@@ -112,9 +122,21 @@ class LoginFragment : Fragment() {
         return true
     }
 
+    /**
+     * Simple function to give a feedback of errors to the user.
+     */
     private fun inputError(textView: TextView, errorMessage : String){
         textView.error = errorMessage
         textView.requestFocus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        // save the data in the viewmodel
+        val email = binding.emailEditLogin.text.toString().trim()
+        val password = binding.passwordEditLogin.text.toString()
+        viewModel.setData(email, password)
     }
 
 }

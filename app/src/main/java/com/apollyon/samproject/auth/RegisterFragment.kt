@@ -16,7 +16,10 @@ import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRegisterBinding
 import kotlinx.android.synthetic.main.fragment_register.*
 
-
+/**
+ * RegisterFragment contains the ui logic for the process of registration
+ * through Firebase Authentication (email and password)
+ */
 class RegisterFragment : Fragment() , View.OnClickListener{
 
     private lateinit var binding : FragmentRegisterBinding
@@ -26,15 +29,22 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
 
+        //initializes the binding and the viewmodel
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_register, container, false )
         viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
         binding.registerViewModel = viewModel
         binding.lifecycleOwner = this
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // observe the livedata in the viewmodel to see if the user has been correctly registered
         viewModel.userAdded.observe(viewLifecycleOwner, Observer { userAdded ->
             if (userAdded){
                 // go to main activity
@@ -43,6 +53,7 @@ class RegisterFragment : Fragment() , View.OnClickListener{
                 )
                 requireActivity().finish()
             }else{
+                // give feedback error to the user
                 Toast.makeText(context,
                     "Error during adding user, please try again",
                     Toast.LENGTH_SHORT).show()
@@ -50,25 +61,25 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         })
 
         binding.registerButton.setOnClickListener(this)
-        return binding.root
     }
 
     override fun onClick(v: View?) {
         when (v!!.id){
-            R.id.banner -> findNavController().popBackStack()
-            R.id.register_button -> register()
+            R.id.banner -> findNavController().popBackStack() // navigate to login (back button)
+            R.id.register_button -> register() // tries to register new user
         }
     }
 
+    /**
+     * Wrapper function that calls viewmodel's register func.
+     */
     private fun register() {
-        //binding.progressBar.visibility = View.VISIBLE
         if(validateForm()){
             viewModel.registerUser()
         }
-        //binding.progressBar.visibility = View.INVISIBLE
     }
 
-    private fun validateForm() : Boolean{
+    private fun setViewmodelData(){
 
         val email = binding.emailEditReg.text.toString().trim()
         val username = binding.usernameReg.text.toString().trim()
@@ -77,12 +88,30 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         val retypedPassword = binding.passwordEditReg2.text.toString()
 
         //passo i dati al viewModel per creare l'utente
-        viewModel.setData(email,
-            username,
-            age.toInt(),
-            password,
-            retypedPassword
+        viewModel.setData(
+            email = email,
+            username = username,
+            age = age,
+            password = password,
+            retypedPassword = retypedPassword
         )
+
+    }
+
+    /**
+     * Validates the form.
+     * @return true if the form is correct, false o/w
+     */
+    private fun validateForm() : Boolean{
+
+        val email = binding.emailEditReg.text.toString().trim()
+        val username = binding.usernameReg.text.toString().trim()
+        val age = binding.ageEdit.text.toString().trim()
+        val password = binding.passwordEditReg.text.toString()
+        val retypedPassword = binding.passwordEditReg2.text.toString()
+
+
+
 
         if(username.isEmpty()){
            binding.usernameReg.error = "username is required"
@@ -130,14 +159,29 @@ class RegisterFragment : Fragment() , View.OnClickListener{
             return false
         }
 
+        //passo i dati al viewModel per creare l'utente
+        viewModel.setData(email,
+            username,
+            age,
+            password,
+            retypedPassword
+        )
+
         return true
 
     }
 
+    /**
+     * Simple function to give a feedback of errors to the user.
+     */
     private fun inputError(textView: TextView, errorMessage : String){
         textView.error = errorMessage
         textView.requestFocus()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        setViewmodelData() // save the datain the viewmodel
+    }
 
 }
