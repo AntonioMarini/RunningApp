@@ -159,7 +159,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
 
         RunService.timeRunInMillis.observe(viewLifecycleOwner, Observer { millis ->
             curTimeInMillis = millis
-            val formattedTime = RunUtil().getFormattedTime(curTimeInMillis, true)
+            val formattedTime = RunUtil.getFormattedTime(curTimeInMillis, true)
             chronometer.text = formattedTime
         })
 

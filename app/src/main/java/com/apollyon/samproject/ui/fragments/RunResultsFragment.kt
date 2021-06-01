@@ -36,7 +36,9 @@ class RunResultsFragment : Fragment(){
 
         binding.textKm.text = String.format("Distance: %.2f km", km)
         binding.textTime.text = getTimeElapsedFormattedString()
-        //binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
+        binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
+
+        session.map_screen = arguments.mapScreenBitmap
 
         return binding.root
     }

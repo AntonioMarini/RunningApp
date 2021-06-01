@@ -37,5 +37,6 @@
     <string name="start_text">Start</string>
     <string name="pause_text">pause</string>
     <string name="start_time">00:00:00:00</string>
+    <string name="clear">Clear History</string>
 
 </resources>

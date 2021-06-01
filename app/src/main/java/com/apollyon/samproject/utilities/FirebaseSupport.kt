@@ -27,7 +27,6 @@ class FirebaseSupport() {
     }
 
     fun updateProfileImage(uri : Uri){
-
         val profileUpdates = userProfileChangeRequest {
             photoUri = uri
         }

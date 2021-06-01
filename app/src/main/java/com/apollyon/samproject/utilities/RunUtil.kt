@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Class that contains utility methods for running
  */
-class RunUtil {
+object RunUtil {
 
     fun getFormattedTime(ms:Long, includeMillis: Boolean = false): String{
         var msCopy = ms
@@ -29,6 +29,10 @@ class RunUtil {
                 "${if(minutes<10) "0" else ""}$minutes:"+
                 "${if(seconds<10) "0" else ""}$seconds:"+
                 "${if(msCopy<10) "0" else ""}$msCopy"
+    }
+
+    fun getDistanceKm(meters: Int): Double {
+        return meters.toDouble() * 0.001
     }
 
     fun calculateCalories(){

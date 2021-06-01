@@ -7,7 +7,7 @@
             name="mainViewModel"
             type="com.apollyon.samproject.viewmodels.MainViewModel" />
     </data>
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,9 +17,40 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:layout_width="409dp"
-            android:layout_height="729dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            >
+
+            <TextView
+                android:id="@+id/text_total_dist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:textSize="@dimen/dist_time_size" />
+
+            <Button
+                android:id="@+id/clear_butt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="25dp"
+                android:text="@string/clear" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

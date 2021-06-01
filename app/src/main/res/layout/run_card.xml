@@ -11,12 +11,12 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_height="150dp">
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_width="100dp"
-                android:layout_height="200dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:src="@drawable/raccoon" />
@@ -25,27 +25,50 @@
                 android:id="@+id/time_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
-                android:text="Running"
                 android:layout_toRightOf="@id/image"
-                android:layout_alignParentTop="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="20sp" />
+                android:text="time" />
 
             <TextView
                 android:id="@+id/distance_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/image"
                 android:layout_below="@id/time_text"
-                android:maxLines="3"
-                android:drawablePadding="10dp"
-                android:ellipsize="end"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
-                android:text="Description"
-                />
+                android:layout_toRightOf="@id/image"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="distance" />
+
+            <TextView
+                android:id="@+id/calories_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/distance_text"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/image"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="calories" />
+
+            <TextView
+                android:id="@+id/date_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calories_text"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/image"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="date" />
 
         </RelativeLayout>
 

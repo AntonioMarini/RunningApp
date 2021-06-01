@@ -37,6 +37,9 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
     // per la recyclerview
     val runSessions = database!!.getAllRunsByDate(authUser?.uid)
 
+    //total km
+    val totalkm = database!!.getTotalDistance(authUser?.uid)
+
     //job per coroutines
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -84,6 +87,12 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     // comunicazione col database -> uso coroutines
 
+    fun clearSessions(){
+        uiScope.launch {
+            clearAll(_user.value?.uid)
+        }
+    }
+
     fun insertSession(session : RunningSession){
         uiScope.launch {
             insert(session)
@@ -100,6 +109,12 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
         withContext(IO){
             database?.insert(session)
+        }
+    }
+
+    private suspend fun clearAll(uid : String?){
+        withContext(IO){
+            database?.deleteAll(uid)
         }
     }
 

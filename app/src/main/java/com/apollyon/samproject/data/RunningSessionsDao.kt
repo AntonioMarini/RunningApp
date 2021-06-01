@@ -15,6 +15,9 @@ interface RunningSessionsDao {
     @Delete
     suspend fun delete(session: RunningSession)
 
+    @Query("delete from running_sessions where user_id = :uid")
+    suspend fun deleteAll(uid: String?)
+
     @Query("select * from running_sessions where sessionID = :sessionID and user_id = :uid")
     fun getSession(sessionID: Long, uid: String?) : RunningSession
 

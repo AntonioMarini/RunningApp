@@ -52,6 +52,15 @@ class HomeFragment : Fragment() {
                 sessionsAdapter.data = it
             }
         })
+
+        binding.clearButt.setOnClickListener {
+            mainViewModel.clearSessions()
+        }
+
+        mainViewModel.totalkm.observe(viewLifecycleOwner, Observer {
+            if(it!=null)
+                binding.textTotalDist.text = it.toString() + "m"
+        })
     }
 
 

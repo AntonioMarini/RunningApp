@@ -113,7 +113,7 @@ class RunService : LifecycleService() {
         }
     }
 
-    val locationCallback = object : LocationCallback(){
+    private val locationCallback = object : LocationCallback(){
         override fun onLocationResult(result: LocationResult?) {
             super.onLocationResult(result)
             if(isTracking.value!!){
@@ -245,7 +245,7 @@ class RunService : LifecycleService() {
         timeRunInSeconds.observe(this, Observer { seconds ->
             val kilometers = distanceInMeters.value?.toDouble()?.times(0.001)
             val notification = currentNotificationBuilder
-                .setContentText(RunUtil().getFormattedTime(seconds * 1000L) + String.format("  Distance: %.2f km", kilometers))
+                .setContentText(RunUtil.getFormattedTime(seconds * 1000L) + String.format("  Distance: %.2f km", kilometers))
             notificationManager.notify(1, notification.build())
         })
 
