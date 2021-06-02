@@ -163,7 +163,6 @@ class RunService : LifecycleService() {
                 }
                 ACTION_STOP_SERVICE -> {
                     stopSelf()
-                    postInitialValues()
                 }
                 else -> Log.i("Debug","unknown action")
             }
@@ -293,6 +292,14 @@ class RunService : LifecycleService() {
     private fun createNotificationChannel(notificationManager: NotificationManager){
         val channel = NotificationChannel("running_channel", "Running App", NotificationManager.IMPORTANCE_LOW)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("Service", "destroyed")
+        postInitialValues()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll() //distrugge tutte le notifiche (solo una)
     }
 
 }

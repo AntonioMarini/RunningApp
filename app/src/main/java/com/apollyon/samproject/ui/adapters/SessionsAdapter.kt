@@ -49,8 +49,8 @@ class SessionsAdapter : RecyclerView.Adapter<SessionsAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = data[position]
         holder.timeText.text = "Time: ${RunUtil.getFormattedTime(item.timeMilli)}"
-        holder.distanceText.text = "Distance: ${RunUtil.getDistanceKm( item.distanceInMeters)} km"
-        holder.caloriesText.text = item.caloriesBurned.toString()
+        holder.distanceText.text = String.format("Distance: %.2f km", RunUtil.getDistanceKm( item.distanceInMeters))
+        holder.caloriesText.text = "Calories: ${item.caloriesBurned}"
         holder.dateText.text = SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(item.timestamp)
         holder.mapscreen.setImageBitmap(item.map_screen)
     }

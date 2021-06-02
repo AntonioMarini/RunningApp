@@ -1,9 +1,12 @@
 package com.apollyon.samproject.ui.activities
 
 import android.net.Uri
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +40,17 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.profileImageDownloaded.observe(this, Observer {uri ->
             changePicture(uri)
+        })
+
+        viewModel.shouldHideBars.observe(this, Observer{ shouldHide ->
+            if(shouldHide) {
+                bottomNavigationView.visibility = GONE
+                toolbar_cont.visibility = GONE
+            }
+            else {
+                bottomNavigationView.visibility = VISIBLE
+                toolbar_cont.visibility = VISIBLE
+            }
         })
 
     }

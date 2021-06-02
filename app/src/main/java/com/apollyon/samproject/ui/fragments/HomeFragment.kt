@@ -13,6 +13,7 @@ import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentHomeBinding
 import com.apollyon.samproject.ui.adapters.SessionsAdapter
+import com.apollyon.samproject.utilities.RunUtil
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
@@ -37,6 +38,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mainViewModel.onRunFinished()
+
         recycler_view.setHasFixedSize(true)
 
         // set the layout manager for the recycler view
@@ -59,7 +62,7 @@ class HomeFragment : Fragment() {
 
         mainViewModel.totalkm.observe(viewLifecycleOwner, Observer {
             if(it!=null)
-                binding.textTotalDist.text = it.toString() + "m"
+                binding.textTotalDist.text = String.format("%.2f km", RunUtil.getDistanceKm(it))
         })
     }
 

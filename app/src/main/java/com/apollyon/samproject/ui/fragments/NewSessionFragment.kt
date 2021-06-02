@@ -60,8 +60,12 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
         viewPager.setPadding(130, 0, 130, 0)
 
         binding.buttonStart.setOnClickListener {
-            if (permissionsGranted)
-                this.findNavController().navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment())
+            if (permissionsGranted) {
+                // nascondo la topbar e la bottom navbar
+                mainViewModel.onRunStarted()
+                this.findNavController()
+                    .navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment())
+            }
             else
                 requestPermissions()
         }

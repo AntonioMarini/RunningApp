@@ -53,10 +53,9 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
     ): View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
-
-
-
         polylineOptions = PolylineOptions()
+
+
 
         return binding.root
     }

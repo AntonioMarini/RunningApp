@@ -10,6 +10,7 @@ import com.apollyon.samproject.utilities.FirebaseSupport
 import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.data.RunningSessionsDao
 import com.apollyon.samproject.data.User
+import com.apollyon.samproject.utilities.RunUtil
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
@@ -39,6 +40,10 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     //total km
     val totalkm = database!!.getTotalDistance(authUser?.uid)
+
+    //to hide/show the topbar and navbar
+    private val _shouldHideBars = MutableLiveData<Boolean>(false)
+    val shouldHideBars :LiveData<Boolean> get() = _shouldHideBars
 
     //job per coroutines
     private var viewModelJob = Job()
@@ -83,6 +88,18 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
             Log.i("DOWNLOAD", "download successful")
             firebaseSupport.updateProfileImage(uri)
         }
+    }
+
+    /**
+     * Called when the run fragment is opened
+     * its used to hide the useless ui of the main activity
+     */
+    fun onRunStarted(){
+        _shouldHideBars.value = true
+    }
+
+    fun onRunFinished(){
+        _shouldHideBars.value = false
     }
 
     // comunicazione col database -> uso coroutines
