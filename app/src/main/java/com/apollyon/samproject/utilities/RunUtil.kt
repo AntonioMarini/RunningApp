@@ -1,5 +1,6 @@
 package com.apollyon.samproject.utilities
 
+import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
 /**
@@ -41,6 +42,22 @@ object RunUtil {
 
     fun calculateAvgSpeedKmh(){
 
+    }
+
+    fun timeStampToChartX(timestamp : Long) : Float{
+        val weekday = SimpleDateFormat("EEE").format(timestamp)
+        var result :Float
+        result = when(weekday){
+            "Mon" -> 0f
+            "Tue" -> 1f
+            "Wed" -> 2f
+            "Thu" -> 3f
+            "Fry" -> 4f
+            "Sat" -> 5f
+            "Sun" -> 6f
+            else -> -1f
+        }
+        return result
     }
 
 

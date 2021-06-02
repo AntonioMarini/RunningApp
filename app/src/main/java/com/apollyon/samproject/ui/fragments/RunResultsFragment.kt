@@ -55,7 +55,7 @@ class RunResultsFragment : Fragment(){
     @SuppressLint("SimpleDateFormat")
     fun getTimeElapsedFormattedString() : String{
         val elapsedTime = session.timeMilli
-        return SimpleDateFormat("'Time:' HH'h':mm'm':ss's'").format(elapsedTime)
+        return SimpleDateFormat("'Time:' HH 'h':mm 'm':ss 's'").format(elapsedTime)
     }
 
 }
