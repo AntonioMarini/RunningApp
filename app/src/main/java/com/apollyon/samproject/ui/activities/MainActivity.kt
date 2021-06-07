@@ -23,15 +23,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    private var isOflline = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dataSource = RunningDatabase.getInstance(application).runningSessionDao
+        val dataSource = RunningDatabase.getInstance(application).runDao
 
+        //viewmodel principale con cui tutti i fragment comunicano, mantiene il dao
         viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
 
+        // bottom navigation
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
         if (navHostFragment != null) NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.navController)
 

@@ -9,10 +9,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
+import com.apollyon.samproject.data.RunningDatabase
+import com.apollyon.samproject.data.User
 import com.apollyon.samproject.databinding.FragmentRegisterBinding
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -24,6 +27,8 @@ class RegisterFragment : Fragment() , View.OnClickListener{
 
     private lateinit var binding : FragmentRegisterBinding
     private lateinit var viewModel: RegisterViewModel
+
+    private val authViewModel : AuthViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,11 +52,14 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         // observe the livedata in the viewmodel to see if the user has been correctly registered
         viewModel.userAdded.observe(viewLifecycleOwner, Observer { userAdded ->
             if (userAdded){
+
+                authViewModel.insertNewUserLocal(viewModel.user)
+
                 // go to main activity
                 this.findNavController().navigate(
                     RegisterFragmentDirections.actionRegisterFragmentToMainActivity()
                 )
-                requireActivity().finish()
+                //requireActivity().finish()
             }else{
                 // give feedback error to the user
                 Toast.makeText(context,
@@ -84,6 +92,8 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         val email = binding.emailEditReg.text.toString().trim()
         val username = binding.usernameReg.text.toString().trim()
         val age = binding.ageEdit.text.toString().trim()
+        val height = binding.heightEdit.text.toString().trim()
+        val weight = binding.weightEdit.text.toString().trim()
         val password = binding.passwordEditReg.text.toString()
         val retypedPassword = binding.passwordEditReg2.text.toString()
 
@@ -92,6 +102,8 @@ class RegisterFragment : Fragment() , View.OnClickListener{
             email = email,
             username = username,
             age = age,
+            height = height,
+            weight = weight,
             password = password,
             retypedPassword = retypedPassword
         )
@@ -107,11 +119,10 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         val email = binding.emailEditReg.text.toString().trim()
         val username = binding.usernameReg.text.toString().trim()
         val age = binding.ageEdit.text.toString().trim()
+        val height = binding.heightEdit.text.toString().trim()
+        val weight = binding.weightEdit.text.toString().trim()
         val password = binding.passwordEditReg.text.toString()
         val retypedPassword = binding.passwordEditReg2.text.toString()
-
-
-
 
         if(username.isEmpty()){
            binding.usernameReg.error = "username is required"
@@ -160,15 +171,17 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         }
 
         //passo i dati al viewModel per creare l'utente
-        viewModel.setData(email,
+        viewModel.setData(
+            email,
             username,
             age,
+            height,
+            weight,
             password,
             retypedPassword
         )
 
         return true
-
     }
 
     /**

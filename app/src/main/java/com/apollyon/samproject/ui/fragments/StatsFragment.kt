@@ -1,5 +1,7 @@
 package com.apollyon.samproject.ui.fragments
 
+import android.graphics.Paint
+import android.icu.text.Transliterator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,33 +47,34 @@ class StatsFragment : Fragment() {
         chart.apply {
             setTouchEnabled(false)
             setScaleEnabled(true)
-            setScaleEnabled(true);
-            setDrawGridBackground(false);
-
-
-
-            description.isEnabled= false
-            xAxis.setDrawLabels(true)
-            xAxis.textColor = android.graphics.Color.BLACK
-            xAxis.axisMaximum = 6f
-            xAxis.axisMinimum = 0f
-            //xAxis.setDrawGridLines(false)
+            setScaleEnabled(true)
+            setDrawGridBackground(false)
+            setExtraOffsets(10f,10f,10f,10f)
+            description.text = "Average Speed"
+            description.textSize = 12f
 
             legend.isEnabled = false
+        }
 
-            //xAxis.axisLineWidth = 10f
-            xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE;
-            xAxis.textSize = 15f;
-            xAxis.valueFormatter = RunChartFormatter()
+        chart.axisLeft.apply {
+            setDrawGridLines(false)
+        }
 
-            axisLeft.granularity = 0.01f
-            axisLeft.setDrawGridLines(false)
+        chart.axisRight.apply {
+            setDrawGridLines(false)
+            setDrawLabels(false)
+            setDrawAxisLine(false)
+        }
 
-            // set an alternative background color
-            setBackgroundColor(android.graphics.Color.WHITE);
-
-            //setViewPortOffsets(0f, 0f, 0f, 0f);
-            setExtraOffsets(10f,10f,10f,10f)
+        chart.xAxis.apply {
+            setDrawLabels(false)
+            textColor = android.graphics.Color.BLACK
+            axisMaximum = 6f
+            axisMinimum = 0f
+            setDrawGridLines(false)
+            position = XAxis.XAxisPosition.BOTTOM_INSIDE;
+            textSize = 15f
+            valueFormatter = RunChartFormatter()
         }
 
         mainViewModel.runSessions.observe(viewLifecycleOwner, Observer {
@@ -80,16 +83,15 @@ class StatsFragment : Fragment() {
 
     }
 
-
     private fun setLineChartValues(values : List<RunningSession>){
 
         for (session in values){
-            entries.add(Entry(RunUtil.timeStampToChartX(session.timestamp), RunUtil.getDistanceKm(session.distanceInMeters).toFloat()))
+            entries.add(Entry(RunUtil.timeStampToChartX(session.timestamp),session.avgSpeedInKMH))
         }
-
 
         lineDataSet = LineDataSet(entries, "Distance over time")
         lineDataSet.setDrawFilled(true)
+        lineDataSet.valueTextSize = 15f
         lineDataSet.setMode(if (lineDataSet.getMode() == LineDataSet.Mode.CUBIC_BEZIER)
             LineDataSet.Mode.LINEAR else LineDataSet.Mode.CUBIC_BEZIER)
 

@@ -212,12 +212,14 @@ class RunService : LifecycleService() {
             val lastPoint = pathPoints.value!!.last().last()
             val preLastPoint = pathPoints.value!!.last()[pathPoints.value!!.last().size - 2]
 
-            val distance = SphericalUtil.computeDistanceBetween(
-                LatLng(preLastPoint.latitude, preLastPoint.longitude),
-                LatLng(lastPoint.latitude, lastPoint.longitude)
+            val result = FloatArray(1)
+            Location.distanceBetween(
+                preLastPoint.latitude, preLastPoint.longitude,
+                lastPoint.latitude, lastPoint.longitude,
+                result
             )
 
-            distanceInMeters.postValue(distanceInMeters.value?.plus(distance.toInt()))
+            distanceInMeters.postValue(distanceInMeters.value?.plus(result[0].toInt()))
         }
     }
 

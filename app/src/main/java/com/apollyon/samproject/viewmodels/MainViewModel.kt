@@ -6,22 +6,24 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.apollyon.samproject.utilities.FirebaseSupport
+import com.apollyon.samproject.data.RunDao
 import com.apollyon.samproject.data.RunningSession
-import com.apollyon.samproject.data.RunningSessionsDao
 import com.apollyon.samproject.data.User
-import com.apollyon.samproject.utilities.RunUtil
+import com.apollyon.samproject.data.UsersDao
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
+class MainViewModel(private val runDao: RunDao?) : ViewModel(){
 
-    private val firebaseSupport : FirebaseSupport = FirebaseSupport()
+    private val firebaseUser = Firebase.auth.currentUser
 
     private val _user = MutableLiveData<User>()
     val user : LiveData<User> get() = _user
@@ -29,17 +31,16 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
     private val _profileImageDownloaded = MutableLiveData<Uri>()
     val profileImageDownloaded : LiveData<Uri> get() = _profileImageDownloaded
 
-    private val _userReference = MutableLiveData<DatabaseReference>()
-    val userReference : LiveData<DatabaseReference> get() = _userReference
-
+    //per fare download/upload dell immagine del profilo
     private val storageReference = FirebaseStorage.getInstance().reference
-    val authUser: FirebaseUser? = firebaseSupport.currentUser
+
+    val authUser : FirebaseUser? = Firebase.auth.currentUser
 
     // per la recyclerview
-    val runSessions = database!!.getAllRunsByDate(authUser?.uid)
+    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid)
 
     //total km
-    val totalkm = database!!.getTotalDistance(authUser?.uid)
+    val totalkm = runDao!!.getTotalRunsDistance(authUser?.uid)
 
     //to hide/show the topbar and navbar
     private val _shouldHideBars = MutableLiveData<Boolean>(false)
@@ -49,6 +50,7 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    // listener che ascolta gli update all'utente da firebase
     private val userListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             // Get Post object and use the values to update the UI
@@ -58,13 +60,6 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
         override fun onCancelled(databaseError: DatabaseError) {
             // Getting Post failed, log a message
             Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-        }
-    }
-
-    init {
-        if (authUser != null) {
-            _userReference.value = FirebaseDatabase.getInstance().getReference("users").child(authUser.uid)
-            _userReference.value!!.addValueEventListener(userListener)
         }
     }
 
@@ -86,7 +81,19 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
     private fun getDownloadUrl(reference : StorageReference){
         reference.downloadUrl.addOnSuccessListener {uri ->
             Log.i("DOWNLOAD", "download successful")
-            firebaseSupport.updateProfileImage(uri)
+            updateProfileImage(uri)
+        }
+    }
+
+    private fun updateProfileImage(uri : Uri){
+        val profileUpdates = userProfileChangeRequest {
+            photoUri = uri
+        }
+
+        authUser?.updateProfile(profileUpdates)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(ContentValues.TAG, "User profile updated.")
+            }
         }
     }
 
@@ -106,7 +113,7 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
 
     fun clearSessions(){
         uiScope.launch {
-            clearAll(_user.value?.uid)
+            clearAll(authUser!!.uid)
         }
     }
 
@@ -121,17 +128,18 @@ class MainViewModel(public val database: RunningSessionsDao?) : ViewModel(){
      * @param session session to add
      */
     private suspend  fun insert(session: RunningSession){
+
         // insert missing data in the session like the user id
-        session.uid = _user.value?.uid
+        session.user =authUser!!.uid
 
         withContext(IO){
-            database?.insert(session)
+            runDao?.insertRun(session)
         }
     }
 
     private suspend fun clearAll(uid : String?){
         withContext(IO){
-            database?.deleteAll(uid)
+            runDao?.deleteAllRunsOfUser(uid)
         }
     }
 

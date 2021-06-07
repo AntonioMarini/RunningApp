@@ -7,11 +7,12 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.apollyon.samproject.utilities.Converters
 
-@Database(entities = [RunningSession::class], version = 1)
+@Database(entities = [RunningSession::class, User::class], version = 1)
 @TypeConverters(Converters::class)
 abstract class RunningDatabase : RoomDatabase(){
 
-    abstract val runningSessionDao : RunningSessionsDao
+    abstract val runDao : RunDao
+    abstract val userDao : UsersDao
 
     companion object{
         @Volatile
@@ -25,9 +26,9 @@ abstract class RunningDatabase : RoomDatabase(){
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         RunningDatabase::class.java,
-                        "sleep_history_database"
+                        "run_database"
                     )
-                        .fallbackToDestructiveMigration()
+                        .fallbackToDestructiveMigration() //migrare -> distrugge tutto
                         .build()
                     INSTANCE = instance
                 }
@@ -36,5 +37,7 @@ abstract class RunningDatabase : RoomDatabase(){
             }
         }
     }
+
+
 
 }

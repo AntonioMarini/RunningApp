@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunResultsBinding
 import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.viewmodels.MainViewModel
 import java.text.SimpleDateFormat
 
@@ -35,7 +36,7 @@ class RunResultsFragment : Fragment(){
         val km = session.distanceInMeters.toDouble() * 0.001
 
         binding.textKm.text = String.format("Distance: %.2f km", km)
-        binding.textTime.text = getTimeElapsedFormattedString()
+        binding.textTime.text = "Time: ${RunUtil.getFormattedTime(session.timeMilli)}"
         binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
 
         session.map_screen = arguments.mapScreenBitmap
@@ -52,10 +53,6 @@ class RunResultsFragment : Fragment(){
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun getTimeElapsedFormattedString() : String{
-        val elapsedTime = session.timeMilli
-        return SimpleDateFormat("'Time:' HH 'h':mm 'm':ss 's'").format(elapsedTime)
-    }
+
 
 }

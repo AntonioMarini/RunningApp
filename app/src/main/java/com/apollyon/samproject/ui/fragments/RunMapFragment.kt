@@ -1,19 +1,14 @@
 package com.apollyon.samproject.ui.fragments
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Build
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -26,10 +21,11 @@ import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.OnMapReadyCallback
 import com.google.android.libraries.maps.model.LatLng
+import com.google.android.libraries.maps.model.LatLngBounds
 import com.google.android.libraries.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.fragment_run_map.*
 
-class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback, GoogleMap.SnapshotReadyCallback {
+class RunMapFragment : Fragment(), OnMapReadyCallback{
 
     private lateinit var binding: FragmentRunMapBinding
 
@@ -75,7 +71,6 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
 
         binding.stopButt.setOnClickListener{
             stopRun() // stops the run
-            map?.snapshot(this) // takes a screenshot of the map
         }
 
         addAllPolylines()
@@ -86,6 +81,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
         if (googleMap != null) {
             map = googleMap
         }
+        addAllPolylines()
     }
 
     override fun onStart() {
@@ -186,8 +182,28 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
     }
 
     private fun stopRun() {
-        session = RunningSession(distanceInMeters = metersDone, timeMilli = curTimeInMillis, timestamp = System.currentTimeMillis())
         sendCommandToService("ACTION_STOP_SERVICE")
+
+        session = RunningSession(
+            distanceInMeters = metersDone,
+            timeMilli = curTimeInMillis,
+            timestamp = System.currentTimeMillis(),
+            avgSpeedInKMH = RunUtil.calculateAvgSpeedKmh(metersDone, curTimeInMillis),
+            caloriesBurned = RunUtil.calculateCalories(metersDone, 70f)
+        ) //TODO weight non hardcoded
+
+        zoomToSeeWholeTrack()
+
+        map?.snapshot { bitmap->
+            // navigate to the RunResults Fragment
+            if (bitmap != null) {
+                this.findNavController().navigate(
+                    RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment(
+                        mapScreenBitmap = bitmap,
+                        session = session
+                ))
+            }
+        }
     }
 
     private fun getPointsFromService(isTracking : Boolean){
@@ -218,16 +234,22 @@ class RunMapFragment : Fragment(), OnMapReadyCallback, ActivityCompat.OnRequestP
         }
     }
 
-    override fun onSnapshotReady(bitmap: Bitmap?) {
-        // navigate to the RunResults Fragment
-        if (bitmap != null) {
-            this.findNavController().navigate(RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment(mapScreenBitmap = bitmap,
-                session = session
-            ))
+    private fun zoomToSeeWholeTrack() {
+        val bounds = LatLngBounds.Builder()
+        for(polyline in pathPoints) {
+            for(pos in polyline) {
+                bounds.include(pos)
+            }
         }
+
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngBounds(
+                bounds.build(),
+                mapView.width,
+                mapView.height,
+                (mapView.height * 0.05f).toInt()
+            )
+        )
     }
-
-
-
 
 }

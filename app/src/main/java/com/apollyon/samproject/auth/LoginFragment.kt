@@ -39,10 +39,10 @@ class LoginFragment : Fragment() {
         binding.loginViewModel = viewModel
         binding.lifecycleOwner = this
 
-        val user = viewModel.auth.currentUser
+        val firebaseUser = viewModel.auth.currentUser
 
         // AUTOLOGIN
-        if (user != null) {
+        if (firebaseUser != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             this.findNavController().navigate(
                 LoginFragmentDirections.actionLoginFragmentToMainActivity()

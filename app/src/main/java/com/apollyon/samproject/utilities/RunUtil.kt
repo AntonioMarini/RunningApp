@@ -36,18 +36,16 @@ object RunUtil {
         return meters.toDouble() * 0.001
     }
 
-    fun calculateCalories(){
-
+    fun calculateCalories(meters: Int, weight : Float) : Int{
+        return ((meters / 1000f) *  weight).toInt()
     }
 
-    fun calculateAvgSpeedKmh(){
-
+    fun calculateAvgSpeedKmh(meters: Int, timeMilli : Long) : Float{
+        return (meters / 1000f) / (timeMilli / 1000f / 60 / 60) * 10
     }
 
-    fun timeStampToChartX(timestamp : Long) : Float{
-        val weekday = SimpleDateFormat("EEE").format(timestamp)
-        var result :Float
-        result = when(weekday){
+    fun timeStampToChartX(timestamp: Long): Float {
+        return when (SimpleDateFormat("EEE").format(timestamp)) {
             "Mon" -> 0f
             "Tue" -> 1f
             "Wed" -> 2f
@@ -57,7 +55,6 @@ object RunUtil {
             "Sun" -> 6f
             else -> -1f
         }
-        return result
     }
 
 
