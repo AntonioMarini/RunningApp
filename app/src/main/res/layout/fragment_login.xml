@@ -5,13 +5,13 @@
     <data>
         <variable
             name="loginViewModel"
-            type="com.apollyon.samproject.auth.LoginViewModel" />
+            type="com.apollyon.samproject.viewmodels.LoginViewModel" />
     </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/loginFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".auth.LoginFragment">
+    tools:context=".ui.fragments.LoginFragment">
 
     <TextView
         android:id="@+id/banner"

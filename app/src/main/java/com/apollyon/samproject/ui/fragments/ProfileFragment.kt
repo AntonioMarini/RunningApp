@@ -52,9 +52,8 @@ class ProfileFragment : Fragment() {
         binding.buttonLogout.setOnClickListener {
             Firebase.auth.signOut()
             this.findNavController().navigate(
-                ProfileFragmentDirections.actionProfileToAuthActivity()
+                ProfileFragmentDirections.actionProfileToLoginFragment()
             )
-            requireActivity().finish()
         }
 
         binding.profileImage.setOnClickListener {

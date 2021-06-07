@@ -6,13 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.compose.ui.text.intl.Locale
 import androidx.recyclerview.widget.RecyclerView
 import com.apollyon.samproject.R
 import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.utilities.RunUtil
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 class SessionsAdapter : RecyclerView.Adapter<SessionsAdapter.ViewHolder>() {
 

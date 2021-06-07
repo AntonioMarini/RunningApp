@@ -1,4 +1,4 @@
-package com.apollyon.samproject.auth
+package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
 import android.util.Patterns
@@ -9,11 +9,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentLoginBinding
+import com.apollyon.samproject.viewmodels.LoginViewModel
+import com.apollyon.samproject.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_forgot.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -24,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
  */
 class LoginFragment : Fragment() {
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var viewModel : LoginViewModel
     private lateinit var binding : FragmentLoginBinding
 
@@ -36,6 +40,7 @@ class LoginFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        mainViewModel.onHideBars()
         binding.loginViewModel = viewModel
         binding.lifecycleOwner = this
 
@@ -45,9 +50,9 @@ class LoginFragment : Fragment() {
         if (firebaseUser != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             this.findNavController().navigate(
-                LoginFragmentDirections.actionLoginFragmentToMainActivity()
+                LoginFragmentDirections.actionLoginFragmentToHome()
             )
-            requireActivity().finish()
+
         }
 
         return binding.root
@@ -75,9 +80,8 @@ class LoginFragment : Fragment() {
         viewModel.userLogged.observe(viewLifecycleOwner, Observer { userLogged ->
             if (userLogged){
                 this.findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToMainActivity()
+                    LoginFragmentDirections.actionLoginFragmentToHome()
                 )
-                requireActivity().finish()
             }else{
                 Toast.makeText(
                     context,

@@ -21,7 +21,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class MainViewModel(private val runDao: RunDao?) : ViewModel(){
+class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?) : ViewModel(){
 
     private val firebaseUser = Firebase.auth.currentUser
 
@@ -101,11 +101,11 @@ class MainViewModel(private val runDao: RunDao?) : ViewModel(){
      * Called when the run fragment is opened
      * its used to hide the useless ui of the main activity
      */
-    fun onRunStarted(){
+    fun onHideBars(){
         _shouldHideBars.value = true
     }
 
-    fun onRunFinished(){
+    fun onShowBars(){
         _shouldHideBars.value = false
     }
 
@@ -130,7 +130,7 @@ class MainViewModel(private val runDao: RunDao?) : ViewModel(){
     private suspend  fun insert(session: RunningSession){
 
         // insert missing data in the session like the user id
-        session.user =authUser!!.uid
+        session.user = authUser!!.uid
 
         withContext(IO){
             runDao?.insertRun(session)
@@ -140,6 +140,18 @@ class MainViewModel(private val runDao: RunDao?) : ViewModel(){
     private suspend fun clearAll(uid : String?){
         withContext(IO){
             runDao?.deleteAllRunsOfUser(uid)
+        }
+    }
+
+    fun insertNewUserLocal( user: User){
+        uiScope.launch {
+            insertUser(user)
+        }
+    }
+
+    private suspend fun insertUser(user: User){
+        withContext(Dispatchers.IO){
+            usersDao.insert(user)
         }
     }
 

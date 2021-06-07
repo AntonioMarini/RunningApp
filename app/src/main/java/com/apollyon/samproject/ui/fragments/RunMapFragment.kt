@@ -17,12 +17,12 @@ import com.apollyon.samproject.databinding.FragmentRunMapBinding
 import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.services.RunService
-import com.google.android.libraries.maps.CameraUpdateFactory
-import com.google.android.libraries.maps.GoogleMap
-import com.google.android.libraries.maps.OnMapReadyCallback
-import com.google.android.libraries.maps.model.LatLng
-import com.google.android.libraries.maps.model.LatLngBounds
-import com.google.android.libraries.maps.model.PolylineOptions
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import kotlinx.android.synthetic.main.fragment_run_map.*
 
 class RunMapFragment : Fragment(), OnMapReadyCallback{

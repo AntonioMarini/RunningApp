@@ -30,10 +30,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dataSource = RunningDatabase.getInstance(application).runDao
+        val dataSource = RunningDatabase.getInstance(application)
 
         //viewmodel principale con cui tutti i fragment comunicano, mantiene il dao
-        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource)).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource.userDao, dataSource.runDao)).get(MainViewModel::class.java)
 
         // bottom navigation
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?

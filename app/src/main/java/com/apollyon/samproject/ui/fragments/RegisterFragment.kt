@@ -1,4 +1,4 @@
-package com.apollyon.samproject.auth
+package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
 import android.util.Patterns
@@ -14,9 +14,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
-import com.apollyon.samproject.data.RunningDatabase
-import com.apollyon.samproject.data.User
 import com.apollyon.samproject.databinding.FragmentRegisterBinding
+import com.apollyon.samproject.viewmodels.MainViewModel
+import com.apollyon.samproject.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
@@ -28,7 +28,7 @@ class RegisterFragment : Fragment() , View.OnClickListener{
     private lateinit var binding : FragmentRegisterBinding
     private lateinit var viewModel: RegisterViewModel
 
-    private val authViewModel : AuthViewModel by activityViewModels()
+    private val mainViewModel : MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,11 +53,11 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         viewModel.userAdded.observe(viewLifecycleOwner, Observer { userAdded ->
             if (userAdded){
 
-                authViewModel.insertNewUserLocal(viewModel.user)
+                mainViewModel.insertNewUserLocal(viewModel.user)
 
                 // go to main activity
                 this.findNavController().navigate(
-                    RegisterFragmentDirections.actionRegisterFragmentToMainActivity()
+                    RegisterFragmentDirections.actionRegisterFragmentToHome()
                 )
                 //requireActivity().finish()
             }else{

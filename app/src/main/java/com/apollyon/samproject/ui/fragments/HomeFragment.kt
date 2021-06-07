@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel.onRunFinished()
+        mainViewModel.onShowBars()
 
         recycler_view.setHasFixedSize(true)
 
@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
         val sessionsAdapter = SessionsAdapter()
         recycler_view.adapter = sessionsAdapter
 
-       mainViewModel.runSessions?.observe(viewLifecycleOwner, Observer { runs ->
+        mainViewModel.runSessions.observe(viewLifecycleOwner, Observer { runs ->
             runs?.let {
                 sessionsAdapter.data = it
             }

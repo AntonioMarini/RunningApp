@@ -1,4 +1,4 @@
-package com.apollyon.samproject.auth
+package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
 import android.util.Patterns

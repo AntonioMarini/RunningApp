@@ -1,4 +1,4 @@
-package com.apollyon.samproject.auth
+package com.apollyon.samproject.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
