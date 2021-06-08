@@ -23,10 +23,7 @@ import kotlinx.coroutines.Dispatchers.IO
 
 class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?) : ViewModel(){
 
-    private val firebaseUser = Firebase.auth.currentUser
-
-    private val _user = MutableLiveData<User>()
-    val user : LiveData<User> get() = _user
+    lateinit var user : LiveData<User>
 
     private val _profileImageDownloaded = MutableLiveData<Uri>()
     val profileImageDownloaded : LiveData<Uri> get() = _profileImageDownloaded
@@ -34,13 +31,13 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
     //per fare download/upload dell immagine del profilo
     private val storageReference = FirebaseStorage.getInstance().reference
 
-    val authUser : FirebaseUser? = Firebase.auth.currentUser
+    var authUser : FirebaseUser? = Firebase.auth.currentUser
 
-    // per la recyclerview
-    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid)
+    private lateinit var userRealtimeReference : DatabaseReference
 
-    //total km
-    val totalkm = runDao!!.getTotalRunsDistance(authUser?.uid)
+    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid) // per la recyclerview
+
+    val totalkm = runDao!!.getTotalRunsDistance(authUser?.uid) //total km
 
     //to hide/show the topbar and navbar
     private val _shouldHideBars = MutableLiveData<Boolean>(false)
@@ -53,8 +50,8 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
     // listener che ascolta gli update all'utente da firebase
     private val userListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            // Get Post object and use the values to update the UI
-            _user.value = dataSnapshot.getValue<User>()
+            // Get Post object and use the values to update the UI and the room database
+            dataSnapshot.getValue<User>()?.let { updateUserLocal(it) }
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -64,7 +61,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
     }
 
     fun uploadImage(uri: Uri){
-        val profileImageRef: StorageReference = storageReference.child("images/" + _user.value?.uid + "/profile/profile.jpg")
+        val profileImageRef: StorageReference = storageReference.child("images/" + user.value!!.uid + "/profile/profile.jpg")
 
         val uploadTask = profileImageRef.putFile(uri)
         uploadTask.addOnFailureListener {
@@ -76,6 +73,15 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
             _profileImageDownloaded.value = uri
             getDownloadUrl(profileImageRef)
         }
+    }
+
+    fun onUserLogged(uid:String){
+
+        authUser = Firebase.auth.currentUser
+        user = usersDao.getUser(authUser!!.uid)
+        userRealtimeReference = FirebaseDatabase.getInstance().getReference("users").child(authUser!!.uid)
+        userRealtimeReference.addValueEventListener(userListener)
+
     }
 
     private fun getDownloadUrl(reference : StorageReference){
@@ -90,7 +96,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
             photoUri = uri
         }
 
-        authUser?.updateProfile(profileUpdates)?.addOnCompleteListener { task ->
+        authUser!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(ContentValues.TAG, "User profile updated.")
             }
@@ -109,7 +115,11 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
         _shouldHideBars.value = false
     }
 
+    /*-------------------------------------ROOM-------------------------------------------------*/
+
     // comunicazione col database -> uso coroutines
+
+    //SESSIONS
 
     fun clearSessions(){
         uiScope.launch {
@@ -122,6 +132,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
             insert(session)
         }
     }
+
 
     /**
      * insert session in the database
@@ -143,6 +154,8 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
         }
     }
 
+    //USERS
+
     fun insertNewUserLocal( user: User){
         uiScope.launch {
             insertUser(user)
@@ -150,8 +163,20 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
     }
 
     private suspend fun insertUser(user: User){
-        withContext(Dispatchers.IO){
+        withContext(IO){
             usersDao.insert(user)
+        }
+    }
+
+    fun updateUserLocal( user: User){
+        uiScope.launch {
+            updateUser(user)
+        }
+    }
+
+    private suspend fun updateUser(user: User){
+        withContext(IO){
+            usersDao.update(user)
         }
     }
 

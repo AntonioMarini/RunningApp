@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
@@ -17,6 +18,7 @@ import com.apollyon.samproject.databinding.FragmentRunMapBinding
 import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.services.RunService
+import com.apollyon.samproject.viewmodels.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -28,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_run_map.*
 class RunMapFragment : Fragment(), OnMapReadyCallback{
 
     private lateinit var binding: FragmentRunMapBinding
+    private val mainViewModel : MainViewModel by activityViewModels()
 
     //map api
     private  var map: GoogleMap? = null
@@ -51,7 +54,8 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
         polylineOptions = PolylineOptions()
 
-
+        // nascondo la topbar e la bottom navbar
+        mainViewModel.onHideBars()
 
         return binding.root
     }

@@ -10,6 +10,8 @@ import android.view.View.VISIBLE
 import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.apollyon.samproject.viewmodels.MainViewModel
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             if(shouldHide) {
                 bottomNavigationView.visibility = GONE
                 toolbar_cont.visibility = GONE
+
             }
             else {
                 bottomNavigationView.visibility = VISIBLE

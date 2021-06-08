@@ -17,6 +17,9 @@ import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentLoginBinding
 import com.apollyon.samproject.viewmodels.LoginViewModel
 import com.apollyon.samproject.viewmodels.MainViewModel
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_forgot.*
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -30,6 +33,7 @@ class LoginFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var viewModel : LoginViewModel
     private lateinit var binding : FragmentLoginBinding
+    private var firebaseUser : FirebaseUser? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,12 +48,14 @@ class LoginFragment : Fragment() {
         binding.loginViewModel = viewModel
         binding.lifecycleOwner = this
 
-        val firebaseUser = viewModel.auth.currentUser
+        firebaseUser = Firebase.auth.currentUser
 
         // AUTOLOGIN
         if (firebaseUser != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
+            mainViewModel.onUserLogged(firebaseUser!!.uid)
             this.findNavController().navigate(
+
                 LoginFragmentDirections.actionLoginFragmentToHome()
             )
 
@@ -79,6 +85,9 @@ class LoginFragment : Fragment() {
 
         viewModel.userLogged.observe(viewLifecycleOwner, Observer { userLogged ->
             if (userLogged){
+                firebaseUser =  Firebase.auth.currentUser
+                mainViewModel.onUserLogged(viewModel.userId)
+
                 this.findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToHome()
                 )

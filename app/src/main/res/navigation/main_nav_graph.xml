@@ -12,11 +12,13 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment2"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/registerFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_loginFragment_to_forgotFragment"
             app:destination="@id/forgotFragment"
-            app:launchSingleTop="true" />
+            app:launchSingleTop="false" />
         <action
             android:id="@+id/action_loginFragment_to_home"
             app:destination="@id/home"
@@ -55,7 +57,7 @@
             android:id="@+id/action_new_session_to_runMapFragment"
             app:destination="@id/runMapFragment"
             app:enterAnim="@android:anim/slide_in_left"
-            app:launchSingleTop="false"
+            app:launchSingleTop="true"
             app:popUpTo="@id/home"
             app:popUpToInclusive="false" />
     </fragment>
@@ -67,14 +69,14 @@
         <action
             android:id="@+id/action_profile_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/home"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@id/achievements"
-        tools:layout="@layout/fragment_trainer"
-        android:name="com.apollyon.samproject.ui.fragments.TrainerFragment"
+        tools:layout="@layout/fragment_achievements"
+        android:name="com.apollyon.samproject.ui.fragments.AchievementsFragment"
         android:label="TrainerFragment" />
     <fragment
         android:id="@id/stats"
@@ -106,8 +108,8 @@
             android:id="@+id/action_runResultsFragment_to_home"
             app:destination="@id/home"
             app:launchSingleTop="true"
-            app:popUpTo="@id/home"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/runResultsFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="mapScreenBitmap"
             app:argType="android.graphics.Bitmap" />

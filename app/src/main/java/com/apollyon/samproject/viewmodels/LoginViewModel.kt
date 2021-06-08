@@ -1,5 +1,6 @@
 package com.apollyon.samproject.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,8 +9,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
 class LoginViewModel : ViewModel(){
-
-    var auth: FirebaseAuth = Firebase.auth
 
     private val _userLogged = MutableLiveData<Boolean>()
     val userLogged : LiveData<Boolean>
@@ -23,6 +22,8 @@ class LoginViewModel : ViewModel(){
     val password : LiveData<String>
         get() = _password
 
+    var userId : String  = ""
+
     init {
         _email.value = ""
         _password.value = ""
@@ -35,6 +36,8 @@ class LoginViewModel : ViewModel(){
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_email.value,_password.value)
                 .addOnCompleteListener { task ->
                     _userLogged.value = task.isSuccessful
+                    userId = task.result.user.uid
+                    Log.i("UID", userId.toString())
                 }
     }
 

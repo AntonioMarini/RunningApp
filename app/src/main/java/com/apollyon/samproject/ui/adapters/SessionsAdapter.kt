@@ -23,19 +23,12 @@ class SessionsAdapter : RecyclerView.Adapter<SessionsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        var timeText: TextView
-        var distanceText : TextView
-        var caloriesText : TextView
-        var dateText : TextView
-        var mapscreen : ImageView
+        var timeText: TextView = itemView.findViewById(R.id.time_text) as TextView
+        var distanceText : TextView = itemView.findViewById(R.id.distance_text) as TextView
+        var caloriesText : TextView = itemView.findViewById(R.id.calories_text) as TextView
+        var dateText : TextView = itemView.findViewById(R.id.date_text) as TextView
+        var mapscreen : ImageView = itemView.findViewById(R.id.image) as ImageView
 
-        init {
-            timeText = itemView.findViewById(R.id.time_text) as TextView
-            distanceText = itemView.findViewById(R.id.distance_text) as TextView
-            caloriesText = itemView.findViewById(R.id.calories_text) as TextView
-            dateText = itemView.findViewById(R.id.date_text) as TextView
-            mapscreen = itemView.findViewById(R.id.image) as ImageView
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

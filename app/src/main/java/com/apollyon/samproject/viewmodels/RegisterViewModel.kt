@@ -83,8 +83,8 @@ class RegisterViewModel() : ViewModel(){
                         _email.value,
                         _username.value,
                         _age.value?.toInt(),
-                        _height.value?.toFloat(),
-                        _weight.value?.toFloat()
+                        height = _height.value?.toFloat(),
+                        weight = _weight.value?.toFloat()
                     )
 
                     addUser()

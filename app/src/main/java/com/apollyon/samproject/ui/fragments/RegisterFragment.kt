@@ -17,6 +17,8 @@ import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRegisterBinding
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.viewmodels.RegisterViewModel
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.fragment_register.*
 
 /**
@@ -54,6 +56,7 @@ class RegisterFragment : Fragment() , View.OnClickListener{
             if (userAdded){
 
                 mainViewModel.insertNewUserLocal(viewModel.user)
+                mainViewModel.onUserLogged(Firebase.auth.currentUser.uid)
 
                 // go to main activity
                 this.findNavController().navigate(

@@ -61,8 +61,6 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
 
         binding.buttonStart.setOnClickListener {
             if (permissionsGranted) {
-                // nascondo la topbar e la bottom navbar
-                mainViewModel.onHideBars()
                 this.findNavController()
                     .navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment())
             }

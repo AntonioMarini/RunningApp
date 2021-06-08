@@ -74,9 +74,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //firebase
-    implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx' // firebase auth
+    implementation 'com.google.firebase:firebase-database-ktx' // realtime database for users info
+    implementation 'com.google.firebase:firebase-storage-ktx' // firebse storage for images
+
     implementation 'com.firebaseui:firebase-ui-storage:6.4.0'
     implementation platform('com.google.firebase:firebase-bom:27.1.0')
 
