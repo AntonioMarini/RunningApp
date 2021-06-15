@@ -6,7 +6,7 @@ import androidx.room.*
 @Dao
 interface UsersDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(user: User)
 
     @Delete
@@ -17,5 +17,8 @@ interface UsersDao {
 
     @Query("select * from users where uid = :uid")
     fun getUser(uid: String) : LiveData<User>
+
+    @Query("select uid from users")
+    fun getAllIds() : Array<String>
 
 }

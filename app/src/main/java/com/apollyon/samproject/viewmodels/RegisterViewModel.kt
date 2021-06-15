@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.apollyon.samproject.data.User
+import com.apollyon.samproject.utilities.LevelUtil
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -84,7 +85,9 @@ class RegisterViewModel() : ViewModel(){
                         _username.value,
                         _age.value?.toInt(),
                         height = _height.value?.toFloat(),
-                        weight = _weight.value?.toFloat()
+                        weight = _weight.value?.toFloat(),
+                        level = 0,
+                        xpToNextLevel = LevelUtil.xpForNextLevel(0)
                     )
 
                     addUser()

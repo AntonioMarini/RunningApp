@@ -1,16 +1,11 @@
 package com.apollyon.samproject.data
 
-import android.os.Parcelable
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.google.firebase.database.IgnoreExtraProperties
-import kotlinx.android.parcel.Parcelize
-
 /**
- * Entity relativa a un utente, viene salvato sia su firebase che in locale sullo smartphone
+ * Entity relativa a un utente, viene salvato sia su firebase che in locale usando room e dao
  */
 @Entity(
     tableName = "users"
@@ -19,7 +14,7 @@ data class User(
 
     @NonNull
     @PrimaryKey(autoGenerate = false)
-    var uid : String = "", // non si autogenera, la sceglie gia firebase
+    var uid : String = "", // non si autogenera, la sceglie gia firebase al momento della registrazione
 
     @ColumnInfo(name = "email")
     var email: String? = null,
@@ -34,6 +29,12 @@ data class User(
     var height: Float? = null,
 
     @ColumnInfo(name = "weight")
-    var weight: Float? = null
+    var weight: Float? = null,
+
+    @ColumnInfo(name = "level")
+    var level: Int? = null,
+
+    @ColumnInfo(name = "xpToNextLevel")
+    var xpToNextLevel: Long? = null
 
 )

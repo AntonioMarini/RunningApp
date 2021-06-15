@@ -6,10 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.apollyon.samproject.data.RunDao
-import com.apollyon.samproject.data.RunningSession
-import com.apollyon.samproject.data.User
-import com.apollyon.samproject.data.UsersDao
+import com.apollyon.samproject.data.*
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -21,7 +18,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?) : ViewModel(){
+class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?, private val achievementsDao: AchievementsDao) : ViewModel(){
 
     lateinit var user : LiveData<User>
 
@@ -35,7 +32,9 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
 
     private lateinit var userRealtimeReference : DatabaseReference
 
-    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid) // per la recyclerview
+    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid) // per la recyclerview nella home
+
+    val allAchievements = achievementsDao.getAllAchievements() // per la recycler degli achievements
 
     val totalkm = runDao!!.getTotalRunsDistance(authUser?.uid) //total km
 
@@ -80,7 +79,14 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
         authUser = Firebase.auth.currentUser
         user = usersDao.getUser(authUser!!.uid)
         userRealtimeReference = FirebaseDatabase.getInstance().getReference("users").child(authUser!!.uid)
+        var user_from_realtime : User?
+        userRealtimeReference.get().addOnSuccessListener {
+            user_from_realtime = it.getValue<User>()
+            user_from_realtime?.let { us -> insertNewUserLocal(us) }
+        }
+
         userRealtimeReference.addValueEventListener(userListener)
+
 
     }
 
@@ -103,6 +109,8 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
         }
     }
 
+
+
     /**
      * Called when the run fragment is opened
      * its used to hide the useless ui of the main activity
@@ -116,6 +124,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
     }
 
     /*-------------------------------------ROOM-------------------------------------------------*/
+    // TODO metti tuttp in un repository
 
     // comunicazione col database -> uso coroutines
 
@@ -129,7 +138,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
 
     fun insertSession(session : RunningSession){
         uiScope.launch {
-            insert(session)
+            insertSessionDao(session)
         }
     }
 
@@ -138,7 +147,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
      * insert session in the database
      * @param session session to add
      */
-    private suspend  fun insert(session: RunningSession){
+    private suspend  fun insertSessionDao(session: RunningSession){
 
         // insert missing data in the session like the user id
         session.user = authUser!!.uid
@@ -158,11 +167,11 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
 
     fun insertNewUserLocal( user: User){
         uiScope.launch {
-            insertUser(user)
+            insertUserDao(user)
         }
     }
 
-    private suspend fun insertUser(user: User){
+    private suspend fun insertUserDao(user: User){
         withContext(IO){
             usersDao.insert(user)
         }
@@ -170,15 +179,42 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?)
 
     fun updateUserLocal( user: User){
         uiScope.launch {
-            updateUser(user)
+            updateUserDao(user)
         }
     }
 
-    private suspend fun updateUser(user: User){
+    private suspend fun updateUserDao(user: User){
         withContext(IO){
             usersDao.update(user)
         }
     }
+
+    // ACHIEVEMENTS
+
+    fun insertAchievements(achievements: List<Achievement>){
+        uiScope.launch {
+            insertAchievementsDao(achievements)
+        }
+    }
+
+    fun insertAchievement(achievement: Achievement){
+        uiScope.launch {
+            insertAchievementDao(achievement)
+        }
+    }
+
+    private suspend fun insertAchievementDao(achievement: Achievement){
+        withContext(IO){
+            val idInserted = achievementsDao.insertAchievement(achievement)
+        }
+    }
+
+    private suspend fun insertAchievementsDao(achievements: List<Achievement>){
+        withContext(IO){
+            val achievementsIds = achievementsDao.insertManyAchievements(achievements)
+        }
+    }
+
 
     override fun onCleared() {
         super.onCleared()

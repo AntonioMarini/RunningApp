@@ -1,6 +1,5 @@
 package com.apollyon.samproject.ui.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,6 @@ import com.apollyon.samproject.databinding.FragmentRunResultsBinding
 import com.apollyon.samproject.data.RunningSession
 import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.viewmodels.MainViewModel
-import java.text.SimpleDateFormat
 
 class RunResultsFragment : Fragment(){
 

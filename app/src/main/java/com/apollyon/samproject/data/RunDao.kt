@@ -48,6 +48,4 @@ interface RunDao {
     @Query("select avg(avg_speed) from running_sessions where user = :uid")
     fun getTotalRunsAvgSpeed(uid: String?): LiveData<Float>
 
-
-
 }

@@ -1,26 +1,50 @@
 package com.apollyon.samproject.ui.adapters
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.apollyon.samproject.R
 import com.apollyon.samproject.data.Achievement
+import com.apollyon.samproject.utilities.AliasingDrawableWrapper
 
 class AchievementsAdapter : RecyclerView.Adapter<AchievementsAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    var data = listOf<Achievement>()
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        var nameText: TextView = itemView.findViewById(R.id.name_text)
+        var descrText: TextView = itemView.findViewById(R.id.description_text)
+        var iconImage: ImageView = itemView.findViewById(R.id.image)
+        var checkObtained: CheckBox = itemView.findViewById(R.id.check_obtained)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = layoutInflater.inflate(R.layout.achievement_card, parent, false) as CardView
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val item = data[position]
+        holder.nameText.text = item.name
+        holder.descrText.text = item.description
+        item.iconBitmap.let {
+            if(it!=null) holder.iconImage.setImageBitmap(it)
+            else holder.iconImage.setImageResource(R.drawable.material_01)
+        }
+        holder.checkObtained.isChecked = false
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return data.size
     }
 }

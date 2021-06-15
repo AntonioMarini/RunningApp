@@ -5,15 +5,20 @@ import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
+import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.apollyon.samproject.R
@@ -34,8 +39,10 @@ class MainActivity : AppCompatActivity() {
 
         val dataSource = RunningDatabase.getInstance(application)
 
+
+
         //viewmodel principale con cui tutti i fragment comunicano, mantiene il dao
-        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource.userDao, dataSource.runDao)).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource.userDao, dataSource.runDao, dataSource.achievementDAo)).get(MainViewModel::class.java)
 
         // bottom navigation
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
@@ -48,15 +55,27 @@ class MainActivity : AppCompatActivity() {
             changePicture(uri)
         })
 
+        val toolbar : androidx.appcompat.widget.Toolbar= findViewById(R.id.toolbar_cont)
+        //setSupportActionBar(toolbar)
+
+
         viewModel.shouldHideBars.observe(this, Observer{ shouldHide ->
             if(shouldHide) {
                 bottomNavigationView.visibility = GONE
                 toolbar_cont.visibility = GONE
 
+                if (navHostFragment != null) {
+                    navHostFragment.navController.graph.startDestination = R.id.loginFragment
+                }
+
             }
             else {
                 bottomNavigationView.visibility = VISIBLE
                 toolbar_cont.visibility = VISIBLE
+
+                if (navHostFragment != null) {
+                    navHostFragment.navController.graph.startDestination = R.id.achievements
+                }
             }
         })
 
@@ -66,6 +85,12 @@ class MainActivity : AppCompatActivity() {
         val imageView = findViewById<ImageView>(R.id.profile_image)
         Glide.with(this)
             .load(uri).into(imageView)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val navController = findNavController(R.id.nav_host_fragment_container)
+        return super.onOptionsItemSelected(item)
     }
 
 }

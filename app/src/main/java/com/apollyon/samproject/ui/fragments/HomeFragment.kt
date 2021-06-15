@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
+import com.apollyon.samproject.data.Achievement
 import com.apollyon.samproject.databinding.FragmentHomeBinding
 import com.apollyon.samproject.ui.adapters.SessionsAdapter
 import com.apollyon.samproject.utilities.RunUtil
@@ -26,7 +26,9 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
+
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
 
@@ -57,6 +59,7 @@ class HomeFragment : Fragment() {
                 sessionsAdapter.data = it
             }
         })
+
 
         binding.clearButt.setOnClickListener {
             mainViewModel.clearSessions()

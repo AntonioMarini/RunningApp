@@ -1,13 +1,21 @@
 package com.apollyon.samproject.data
 
 import android.graphics.Bitmap
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.firebase.database.IgnoreExtraProperties
 
-data class Achievement(
-    private val name: String,
+@Entity(tableName = "achievements")
+data class Achievement (
+    @PrimaryKey(autoGenerate = true)
+    var achievementId: Long? = null,
 
-    private val description: String,
+    var name: String? = null,
 
-    private val imageBmp: Bitmap,
+    var description: String? = null,
 
-    private var obtained: Boolean = false
-)
+    var iconBitmap: Bitmap? = null
+
+){
+
+}

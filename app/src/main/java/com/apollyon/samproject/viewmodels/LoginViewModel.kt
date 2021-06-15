@@ -36,9 +36,10 @@ class LoginViewModel : ViewModel(){
         FirebaseAuth.getInstance().signInWithEmailAndPassword(_email.value,_password.value)
                 .addOnCompleteListener { task ->
                     _userLogged.value = task.isSuccessful
-                    userId = task.result.user.uid
-                    Log.i("UID", userId.toString())
-                }
+                }.addOnSuccessListener {
+                userId = it.user.uid
+                Log.i("UID", userId.toString())
+            }
     }
 
     fun setData(email : String = "", password: String = ""){

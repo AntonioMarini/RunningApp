@@ -114,4 +114,12 @@
             android:name="mapScreenBitmap"
             app:argType="android.graphics.Bitmap" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.apollyon.samproject.ui.fragments.SettingsFragment"
+        android:label="SettingsFragment" />
+
+    <!--Global action-->
+    <action android:id="@+id/open_settings_fragment"
+        app:destination="@id/settingsFragment"/>
 </navigation>

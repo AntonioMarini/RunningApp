@@ -86,7 +86,7 @@ class LoginFragment : Fragment() {
         viewModel.userLogged.observe(viewLifecycleOwner, Observer { userLogged ->
             if (userLogged){
                 firebaseUser =  Firebase.auth.currentUser
-                mainViewModel.onUserLogged(viewModel.userId)
+                mainViewModel.onUserLogged(firebaseUser!!.uid)
 
                 this.findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToHome()
