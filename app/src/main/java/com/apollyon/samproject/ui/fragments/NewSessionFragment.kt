@@ -50,7 +50,7 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
 
         val trainingModes = ArrayList<TrainingMode>()
         trainingModes.add(TrainingMode(R.drawable.raccoon, "Standard Running", "This is pretty normal"))
-        trainingModes.add(TrainingMode(R.drawable.ghepardo, "HIIT Running", "High-intensity interval training running consists of intervals of high intensive run with lower intensive intervals"))
+        //trainingModes.add(TrainingMode(R.drawable.ghepardo, "HIIT Running", "High-intensity interval training running consists of intervals of high intensive run with lower intensive intervals"))
         trainingModes.add(TrainingMode(R.drawable.falco, "Cycling", "Bike is nice"))
 
         trainingsAdapter = TrainingsAdapter(trainingModes, context)

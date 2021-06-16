@@ -25,6 +25,8 @@ class RegisterViewModel() : ViewModel(){
     private var auth : FirebaseAuth? = FirebaseAuth.getInstance()
     private var firebaseUser : FirebaseUser? = null
 
+    var uid : String? = null
+
     //well encapsulated livedata fields that contains the data of the form
     // they also prevent to lose the data when the fragment associated is destroyed
     // (e.g. when the screen is rotated)
@@ -86,10 +88,10 @@ class RegisterViewModel() : ViewModel(){
                         _age.value?.toInt(),
                         height = _height.value?.toFloat(),
                         weight = _weight.value?.toFloat(),
-                        level = 0,
-                        xpToNextLevel = LevelUtil.xpForNextLevel(0)
+                        level = 1,
+                        xpToNextLevel = LevelUtil.xpForNextLevel(1)
                     )
-
+                    uid = firebaseUser!!.uid
                     addUser()
                     //insertNewUserLocal(user)
                 }else{

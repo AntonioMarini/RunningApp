@@ -85,7 +85,6 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
         if (googleMap != null) {
             map = googleMap
         }
-        addAllPolylines()
     }
 
     override fun onStart() {
@@ -96,6 +95,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
     override fun onResume() {
         super.onResume()
         mapView?.onResume()
+        addAllPolylines()
     }
 
     override fun onPause() {
@@ -122,7 +122,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
         for(polyline in pathPoints){
             polylineOptions = PolylineOptions()
                 .color(Color.RED)
-                .width(10f)
+                .width(12f)
                 .addAll(polyline)
             map?.addPolyline(polylineOptions)
             polylineOptions
@@ -193,7 +193,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
             timeMilli = curTimeInMillis,
             timestamp = System.currentTimeMillis(),
             avgSpeedInKMH = RunUtil.calculateAvgSpeedKmh(metersDone, curTimeInMillis),
-            caloriesBurned = RunUtil.calculateCalories(metersDone, 70f)
+            caloriesBurned = RunUtil.calculateCalories(metersDone, mainViewModel.userFromRealtime.value!!.weight!!)
         ) //TODO weight non hardcoded
 
         zoomToSeeWholeTrack()

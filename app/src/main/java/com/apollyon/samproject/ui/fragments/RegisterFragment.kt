@@ -54,9 +54,8 @@ class RegisterFragment : Fragment() , View.OnClickListener{
         // observe the livedata in the viewmodel to see if the user has been correctly registered
         viewModel.userAdded.observe(viewLifecycleOwner, Observer { userAdded ->
             if (userAdded){
-
+                mainViewModel.onUserLogged(viewModel.uid!!)
                 mainViewModel.insertNewUserLocal(viewModel.user)
-                mainViewModel.onUserLogged(Firebase.auth.currentUser.uid)
 
                 // go to main activity
                 this.findNavController().navigate(

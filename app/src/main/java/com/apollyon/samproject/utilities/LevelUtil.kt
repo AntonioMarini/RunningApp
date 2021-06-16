@@ -10,7 +10,7 @@ object LevelUtil {
     }
 
     fun calculateXpFromRun(calories: Int, avgSpeed: Float) : Long{
-        return ((calories + avgSpeed) * 100).toLong()
+        return ((calories + avgSpeed) * 5).toLong()
     }
 
 }

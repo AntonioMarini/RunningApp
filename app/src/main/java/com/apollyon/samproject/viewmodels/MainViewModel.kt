@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.apollyon.samproject.data.*
+import com.apollyon.samproject.utilities.LevelUtil
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
@@ -18,33 +19,32 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?, private val achievementsDao: AchievementsDao) : ViewModel(){
+class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, private val achievementsDao: AchievementsDao) : ViewModel(){
 
-    lateinit var user : LiveData<User>
-
-    private val _profileImageDownloaded = MutableLiveData<Uri>()
-    val profileImageDownloaded : LiveData<Uri> get() = _profileImageDownloaded
-
-    //per fare download/upload dell immagine del profilo
-    private val storageReference = FirebaseStorage.getInstance().reference
-
-    var authUser : FirebaseUser? = Firebase.auth.currentUser
-
+    var authUser : FirebaseUser? = null
     private lateinit var userRealtimeReference : DatabaseReference
 
-    val runSessions = runDao!!.getAllRunsByDate(authUser?.uid) // per la recyclerview nella home
-
-    val allAchievements = achievementsDao.getAllAchievements() // per la recycler degli achievements
-
-    val totalkm = runDao!!.getTotalRunsDistance(authUser?.uid) //total km
+    //ottenuti dopo da room quando l'utente fa il login
+    lateinit var user : LiveData<User>
+    lateinit var allAchievements : LiveData<List<Achievement>> // per la recycler degli achievements
+    lateinit var runSessions : LiveData<List<RunningSession>> // per la recyclerview nella home
+    lateinit var totalKm : LiveData<Int>  //total km
 
     //to hide/show the topbar and navbar
     private val _shouldHideBars = MutableLiveData<Boolean>(false)
     val shouldHideBars :LiveData<Boolean> get() = _shouldHideBars
 
+    //per fare download/upload dell immagine del profilo
+    private val _profileImageDownloaded = MutableLiveData<Uri>()
+    val profileImageDownloaded : LiveData<Uri> get() = _profileImageDownloaded
+    private val storageReference = FirebaseStorage.getInstance().reference
+
     //job per coroutines
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    private val _userFromRealtime = MutableLiveData<User?>()
+    val userFromRealtime : LiveData<User?> get() = _userFromRealtime
 
     // listener che ascolta gli update all'utente da firebase
     private val userListener = object : ValueEventListener {
@@ -60,7 +60,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?,
     }
 
     fun uploadImage(uri: Uri){
-        val profileImageRef: StorageReference = storageReference.child("images/" + user.value!!.uid + "/profile/profile.jpg")
+        val profileImageRef: StorageReference = storageReference.child("images/" + user.value?.uid + "/profile/profile.jpg")
 
         val uploadTask = profileImageRef.putFile(uri)
         uploadTask.addOnFailureListener {
@@ -75,33 +75,36 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?,
     }
 
     fun onUserLogged(uid:String){
-
         authUser = Firebase.auth.currentUser
-        user = usersDao.getUser(authUser!!.uid)
+
         userRealtimeReference = FirebaseDatabase.getInstance().getReference("users").child(authUser!!.uid)
-        var user_from_realtime : User?
+
+        // prendo user da realtime database
         userRealtimeReference.get().addOnSuccessListener {
-            user_from_realtime = it.getValue<User>()
-            user_from_realtime?.let { us -> insertNewUserLocal(us) }
+            _userFromRealtime.value = it.getValue<User>()
+            insertNewUserLocal(_userFromRealtime.value!!)
         }
 
         userRealtimeReference.addValueEventListener(userListener)
 
-
+        // inizializzo i campi che mi servono usando i dao
+        user = usersDao.getUser(authUser!!.uid)
+        allAchievements = achievementsDao.getAllAchievements()
+        runSessions = runDao.getAllRunsByDate(authUser?.uid)
+        totalKm = runDao.getTotalRunsDistance(authUser?.uid)
     }
 
+    // update immgine profilo
     private fun getDownloadUrl(reference : StorageReference){
         reference.downloadUrl.addOnSuccessListener {uri ->
             Log.i("DOWNLOAD", "download successful")
             updateProfileImage(uri)
         }
     }
-
     private fun updateProfileImage(uri : Uri){
         val profileUpdates = userProfileChangeRequest {
             photoUri = uri
         }
-
         authUser!!.updateProfile(profileUpdates).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d(ContentValues.TAG, "User profile updated.")
@@ -109,7 +112,29 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?,
         }
     }
 
+    fun addXp(xpGained: Long){
 
+        var initialXpToNextLevel = _userFromRealtime.value!!.xpToNextLevel!!
+        var xpRemaining = initialXpToNextLevel - xpGained; // puo essere negativo
+
+        while(xpRemaining<0){
+            levelUp()
+            initialXpToNextLevel = _userFromRealtime.value!!.xpToNextLevel!!
+            xpRemaining += initialXpToNextLevel
+        }
+
+        _userFromRealtime.value!!.xpToNextLevel =  xpRemaining;
+        userRealtimeReference.child("xpToNextLevel").setValue(_userFromRealtime.value!!.xpToNextLevel)
+        userRealtimeReference.child("level").setValue(_userFromRealtime.value!!.level)
+    }
+
+    private fun levelUp(){
+        if(_userFromRealtime.value!!.level != null) {
+            _userFromRealtime.value!!.level = _userFromRealtime.value!!.level!! + 1
+            val newLevel = _userFromRealtime.value!!.level!!
+            _userFromRealtime.value!!.xpToNextLevel = LevelUtil.xpForNextLevel(newLevel)
+        }
+    }
 
     /**
      * Called when the run fragment is opened
@@ -142,24 +167,22 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao?,
         }
     }
 
-
     /**
      * insert session in the database
      * @param session session to add
      */
     private suspend  fun insertSessionDao(session: RunningSession){
-
         // insert missing data in the session like the user id
         session.user = authUser!!.uid
 
         withContext(IO){
-            runDao?.insertRun(session)
+            runDao.insertRun(session)
         }
     }
 
     private suspend fun clearAll(uid : String?){
         withContext(IO){
-            runDao?.deleteAllRunsOfUser(uid)
+            runDao.deleteAllRunsOfUser(uid)
         }
     }
 

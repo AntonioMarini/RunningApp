@@ -10,6 +10,8 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,7 @@ import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.apollyon.samproject.R
 import com.apollyon.samproject.data.RunningDatabase
+import com.apollyon.samproject.utilities.LevelUtil
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -39,8 +42,6 @@ class MainActivity : AppCompatActivity() {
 
         val dataSource = RunningDatabase.getInstance(application)
 
-
-
         //viewmodel principale con cui tutti i fragment comunicano, mantiene il dao
         viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource.userDao, dataSource.runDao, dataSource.achievementDAo)).get(MainViewModel::class.java)
 
@@ -54,10 +55,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.profileImageDownloaded.observe(this, Observer {uri ->
             changePicture(uri)
         })
-
-        val toolbar : androidx.appcompat.widget.Toolbar= findViewById(R.id.toolbar_cont)
-        //setSupportActionBar(toolbar)
-
 
         viewModel.shouldHideBars.observe(this, Observer{ shouldHide ->
             if(shouldHide) {
@@ -79,6 +76,17 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        val levelText = findViewById<TextView>(R.id.level_text)
+        val progressBar = findViewById<ProgressBar>(R.id.progress_top)
+
+        viewModel.userFromRealtime.observe(this, Observer {
+            if (it != null) {
+                levelText.text = "Lvl ${it.level}"
+                progressBar.max = LevelUtil.xpForNextLevel(it.level!! - 1).toInt()
+                progressBar.progress = progressBar.max - it.xpToNextLevel!!.toInt()
+            }
+        })
+
     }
 
     private fun changePicture(uri : Uri?){
@@ -87,10 +95,5 @@ class MainActivity : AppCompatActivity() {
             .load(uri).into(imageView)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        val navController = findNavController(R.id.nav_host_fragment_container)
-        return super.onOptionsItemSelected(item)
-    }
 
 }

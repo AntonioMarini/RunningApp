@@ -28,11 +28,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-
-
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
-
-
         binding.mainViewModel = mainViewModel
         binding.lifecycleOwner = this
 
@@ -47,7 +43,7 @@ class HomeFragment : Fragment() {
         recycler_view.setHasFixedSize(true)
 
         // set the layout manager for the recycler view
-        val linearLayManager: LinearLayoutManager = LinearLayoutManager(requireContext())
+        val linearLayManager = LinearLayoutManager(requireContext())
         recycler_view.layoutManager = linearLayManager
 
         //List<RunningSession>
@@ -60,12 +56,11 @@ class HomeFragment : Fragment() {
             }
         })
 
-
         binding.clearButt.setOnClickListener {
             mainViewModel.clearSessions()
         }
 
-        mainViewModel.totalkm.observe(viewLifecycleOwner, Observer {
+        mainViewModel.totalKm.observe(viewLifecycleOwner, Observer {
             if(it!=null)
                 binding.textTotalDist.text = String.format("%.2f km", RunUtil.getDistanceKm(it))
         })

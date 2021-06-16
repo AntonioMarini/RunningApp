@@ -26,7 +26,6 @@
             app:menu="@menu/topbar_menu"
             app:popupTheme="@style/Theme.SAMproject">
 
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="36dp"
@@ -38,6 +37,25 @@
                 app:civ_border_color="#FF000000"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="10dp" />
+
+            <TextView
+                android:id="@+id/level_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lvl "
+                tools:layout_editor_absoluteX="62dp"
+                tools:layout_editor_absoluteY="18dp" />
+
+            <ProgressBar
+                android:layout_marginLeft="10dp"
+                android:id="@+id/progress_top"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="4dp" />
+
+
 
 
         </androidx.appcompat.widget.Toolbar>
@@ -64,6 +82,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_cont"
             app:navGraph="@navigation/main_nav_graph" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

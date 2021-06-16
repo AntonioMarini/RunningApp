@@ -43,6 +43,7 @@ class StatsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //mainViewModel.addXp(5)
 
         chart.apply {
             setTouchEnabled(false)
@@ -52,7 +53,6 @@ class StatsFragment : Fragment() {
             setExtraOffsets(10f,10f,10f,10f)
             description.text = "Average Speed"
             description.textSize = 12f
-
             legend.isEnabled = false
         }
 

@@ -1,6 +1,7 @@
 package com.apollyon.samproject.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -54,8 +55,8 @@ class LoginFragment : Fragment() {
         if (firebaseUser != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             mainViewModel.onUserLogged(firebaseUser!!.uid)
+            Log.i("UID", firebaseUser!!.uid)
             this.findNavController().navigate(
-
                 LoginFragmentDirections.actionLoginFragmentToHome()
             )
 
