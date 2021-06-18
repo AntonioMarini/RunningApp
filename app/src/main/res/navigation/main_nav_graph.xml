@@ -74,9 +74,9 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@id/achievements"
-        tools:layout="@layout/fragment_achievements"
-        android:name="com.apollyon.samproject.ui.fragments.AchievementsFragment"
+        android:id="@id/missions"
+        tools:layout="@layout/fragment_missions"
+        android:name="com.apollyon.samproject.ui.fragments.MissionsFragment"
         android:label="TrainerFragment" />
     <fragment
         android:id="@id/stats"

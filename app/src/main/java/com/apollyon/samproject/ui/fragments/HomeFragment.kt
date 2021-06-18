@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.apollyon.samproject.viewmodels.MainViewModel
 import com.apollyon.samproject.R
-import com.apollyon.samproject.data.Achievement
+import com.apollyon.samproject.data.Mission
 import com.apollyon.samproject.databinding.FragmentHomeBinding
 import com.apollyon.samproject.ui.adapters.SessionsAdapter
 import com.apollyon.samproject.utilities.RunUtil
@@ -39,7 +39,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainViewModel.onShowBars()
-
         recycler_view.setHasFixedSize(true)
 
         // set the layout manager for the recycler view
@@ -61,14 +60,13 @@ class HomeFragment : Fragment() {
         }
 
         mainViewModel.totalKm.observe(viewLifecycleOwner, Observer {
-            if(it!=null)
+            if(it!=null) {
                 binding.textTotalDist.text = String.format("%.2f km", RunUtil.getDistanceKm(it))
+                mainViewModel.onRunFinished(it)
+            }
+            else{
+                binding.textTotalDist.text = String.format("%.2f km", 0.00f)
+            }
         })
     }
-
-
-
-
-
-
 }

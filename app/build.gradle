@@ -41,9 +41,6 @@ android {
     }
 }
 
-repositories {
-    maven { url 'https://jitpack.io' } //MPAndroidChartLibrary
-}
 
 dependencies {
 
@@ -115,9 +112,6 @@ dependencies {
     // Easy permissions
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'
-
-    //MPAndroidChart library for charts
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

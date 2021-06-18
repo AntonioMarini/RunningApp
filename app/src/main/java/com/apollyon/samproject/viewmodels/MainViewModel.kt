@@ -19,16 +19,20 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, private val achievementsDao: AchievementsDao) : ViewModel(){
+class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, private val missionsDao: MissionsDao) : ViewModel(){
 
     var authUser : FirebaseUser? = null
     private lateinit var userRealtimeReference : DatabaseReference
 
     //ottenuti dopo da room quando l'utente fa il login
     lateinit var user : LiveData<User>
-    lateinit var allAchievements : LiveData<List<Achievement>> // per la recycler degli achievements
+    lateinit var allMissions : LiveData<List<Mission>> // per la recycler degli achievements
     lateinit var runSessions : LiveData<List<RunningSession>> // per la recyclerview nella home
-    lateinit var totalKm : LiveData<Int>  //total km
+
+    lateinit var totalKm : LiveData<Int>
+    lateinit var totalTime : LiveData<Long>
+    lateinit var totalAvgSpeed : LiveData<Float>
+    lateinit var totalCalories : LiveData<Int>
 
     //to hide/show the topbar and navbar
     private val _shouldHideBars = MutableLiveData<Boolean>(false)
@@ -45,6 +49,8 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
 
     private val _userFromRealtime = MutableLiveData<User?>()
     val userFromRealtime : LiveData<User?> get() = _userFromRealtime
+
+    var pendingSnackbarInfo = MutableLiveData<String>("")
 
     // listener che ascolta gli update all'utente da firebase
     private val userListener = object : ValueEventListener {
@@ -76,8 +82,7 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
 
     fun onUserLogged(uid:String){
         authUser = Firebase.auth.currentUser
-
-        userRealtimeReference = FirebaseDatabase.getInstance().getReference("users").child(authUser!!.uid)
+        userRealtimeReference = FirebaseDatabase.getInstance().getReference("users").child(uid)
 
         // prendo user da realtime database
         userRealtimeReference.get().addOnSuccessListener {
@@ -88,10 +93,14 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
         userRealtimeReference.addValueEventListener(userListener)
 
         // inizializzo i campi che mi servono usando i dao
-        user = usersDao.getUser(authUser!!.uid)
-        allAchievements = achievementsDao.getAllAchievements()
-        runSessions = runDao.getAllRunsByDate(authUser?.uid)
-        totalKm = runDao.getTotalRunsDistance(authUser?.uid)
+        user = usersDao.getUser(uid)
+        allMissions = missionsDao.getAllMissions()
+        runSessions = runDao.getAllRunsByDate(uid)
+
+        totalKm = runDao.getTotalRunsDistance(authUser!!.uid)
+        totalAvgSpeed = runDao.getTotalRunsAvgSpeed(uid)
+        totalCalories = runDao.getRunsTotalCal(uid)
+        totalTime = runDao.getTotalTimeInMillis(uid) // TODO da trasformare
     }
 
     // update immgine profilo
@@ -136,6 +145,23 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
         }
     }
 
+    fun onRunFinished(totalkm : Int){
+        val missions = allMissions.value
+        if (missions != null) {
+            for(m in missions){
+                if(!m.complete!! && parseMissionCondition(m.condition!!, totalkm))
+                    onMissionCompleted(m)
+            }
+        }
+    }
+
+    fun onMissionCompleted(m:Mission){
+        m.complete = true
+        updateMission(m)
+        addXp(m.xpReward!!)
+        pendingSnackbarInfo.postValue(m.name!! + " has been completed! Gained: ${m.xpReward}xp")
+    }
+
     /**
      * Called when the run fragment is opened
      * its used to hide the useless ui of the main activity
@@ -147,6 +173,38 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
     fun onShowBars(){
         _shouldHideBars.value = false
     }
+
+    /*-------------------------------------Missions Conditions-------------------------------------------------*/
+
+    fun parseMissionCondition(condition: String, totalkm : Int) : Boolean{
+        val tokens = condition.split(" ")
+        return when(tokens[0]){
+            "run" -> missionRunCondition(tokens.subList(1,tokens.size), totalkm)
+            // altri eventuali tipi di condizione
+            else -> false
+        }
+    }
+
+    private fun missionRunCondition(tokens : List<String>, totalkm : Int) : Boolean{
+        return when(tokens[0]){
+            "distance" -> missionRunDistanceCondition(tokens.subList(1,tokens.size), totalkm)
+            // altri eventuali parametri sulla condizione
+            else -> false
+        }
+    }
+
+    private fun missionRunDistanceCondition(tokens : List<String>, totalkm : Int) : Boolean{
+        val operator = tokens[0]
+        val value = tokens[1]
+
+        return when(operator){
+            ">" -> totalkm >=  value.toInt()
+            //altri eventuali operatori
+            else -> false
+        }
+    }
+
+    //altre funzioni per altri tipi di missioni che hanno condizioni su utenti per esempio...
 
     /*-------------------------------------ROOM-------------------------------------------------*/
     // TODO metti tuttp in un repository
@@ -212,37 +270,46 @@ class MainViewModel(private val usersDao: UsersDao, private val runDao: RunDao, 
         }
     }
 
-    // ACHIEVEMENTS
+    // MISSIONS
 
-    fun insertAchievements(achievements: List<Achievement>){
+    fun insertMission(mission: Mission){
         uiScope.launch {
-            insertAchievementsDao(achievements)
+            insertMissionDao(mission)
         }
     }
 
-    fun insertAchievement(achievement: Achievement){
+    fun insertMissions(missions: List<Mission>){
         uiScope.launch {
-            insertAchievementDao(achievement)
+            insertMissionsDao(missions)
         }
     }
 
-    private suspend fun insertAchievementDao(achievement: Achievement){
+    fun updateMission(mission: Mission){
+        uiScope.launch {
+            updateMissionDao(mission)
+        }
+    }
+
+    private suspend fun insertMissionDao(mission: Mission){
         withContext(IO){
-            val idInserted = achievementsDao.insertAchievement(achievement)
+            missionsDao.insertMission(mission)
         }
     }
 
-    private suspend fun insertAchievementsDao(achievements: List<Achievement>){
+    private suspend fun insertMissionsDao(missions: List<Mission>){
         withContext(IO){
-            val achievementsIds = achievementsDao.insertManyAchievements(achievements)
+            missionsDao.insertManyMissions(missions)
         }
     }
 
+    private suspend fun updateMissionDao(mission: Mission){
+        withContext(IO){
+            missionsDao.updateMission(mission)
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
-
-
 }

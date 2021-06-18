@@ -21,7 +21,6 @@ import com.apollyon.samproject.viewmodels.SessionViewModel
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-
 class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermissions.PermissionCallbacks{
 
     private lateinit var viewPager: ViewPager

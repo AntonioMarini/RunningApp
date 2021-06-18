@@ -44,18 +44,4 @@ object RunUtil {
         return (meters / 1000f) / (timeMilli / 1000f / 60 / 60) * 10
     }
 
-    fun timeStampToChartX(timestamp: Long): Float {
-        return when (SimpleDateFormat("EEE").format(timestamp)) {
-            "Mon" -> 0f
-            "Tue" -> 1f
-            "Wed" -> 2f
-            "Thu" -> 3f
-            "Fry" -> 4f
-            "Sat" -> 5f
-            "Sun" -> 6f
-            else -> -1f
-        }
-    }
-
-
 }

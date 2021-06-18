@@ -77,7 +77,6 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
             stopRun() // stops the run
         }
 
-        addAllPolylines()
     }
 
     //
@@ -230,8 +229,8 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
             val lastLatLng = pathPoints.last().last()
 
             polylineOptions = PolylineOptions()
-                .color(R.color.color3)
-                .width(10f)
+                .color(Color.RED)
+                .width(12f)
                 .add(preLastLatLng)
                 .add(lastLatLng)
             map?.addPolyline(polylineOptions)

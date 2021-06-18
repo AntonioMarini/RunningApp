@@ -9,12 +9,11 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.apollyon.samproject.R
-import com.apollyon.samproject.data.Achievement
-import com.apollyon.samproject.utilities.AliasingDrawableWrapper
+import com.apollyon.samproject.data.Mission
 
-class AchievementsAdapter : RecyclerView.Adapter<AchievementsAdapter.ViewHolder>() {
+class MissionsAdapter : RecyclerView.Adapter<MissionsAdapter.ViewHolder>() {
 
-    var data = listOf<Achievement>()
+    var data = listOf<Mission>()
     set(value) {
         field = value
         notifyDataSetChanged()
@@ -29,7 +28,7 @@ class AchievementsAdapter : RecyclerView.Adapter<AchievementsAdapter.ViewHolder>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.achievement_card, parent, false) as CardView
+        val view = layoutInflater.inflate(R.layout.mission_card, parent, false) as CardView
         return ViewHolder(view)
     }
 
@@ -41,7 +40,7 @@ class AchievementsAdapter : RecyclerView.Adapter<AchievementsAdapter.ViewHolder>
             if(it!=null) holder.iconImage.setImageBitmap(it)
             else holder.iconImage.setImageResource(R.drawable.material_01)
         }
-        holder.checkObtained.isChecked = false
+        holder.checkObtained.isChecked = item.complete == true
     }
 
     override fun getItemCount(): Int {

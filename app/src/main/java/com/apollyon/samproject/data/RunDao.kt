@@ -42,6 +42,7 @@ interface RunDao {
     @Query("select sum(calories_burned) from running_sessions where user = :uid")
     fun getRunsTotalCal(uid: String?): LiveData<Int>
 
+    @Transaction
     @Query("select sum(distance_meters) from running_sessions where user = :uid")
     fun getTotalRunsDistance(uid: String?): LiveData<Int>
 

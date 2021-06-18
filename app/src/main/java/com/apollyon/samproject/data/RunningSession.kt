@@ -23,7 +23,6 @@ import kotlinx.android.parcel.Parcelize
         )]
 )
 data class RunningSession(
-
         @PrimaryKey(autoGenerate = true)
         val session_id : Long? = null,
 

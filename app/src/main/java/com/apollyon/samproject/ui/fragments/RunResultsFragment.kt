@@ -18,11 +18,9 @@ import com.apollyon.samproject.viewmodels.MainViewModel
 
 class RunResultsFragment : Fragment(){
 
-
     private val mainViewModel : MainViewModel by activityViewModels()
     private lateinit var binding: FragmentRunResultsBinding
     private lateinit var session : RunningSession
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,8 +77,6 @@ class RunResultsFragment : Fragment(){
         while(currLevel < newLevel){
             progressAnimation = ProgressAnimation(binding.progressBar2, 0, maxLevelXp.toInt())
             progressAnimation.duration = 1000
-
-
             currLevel++
             // 1: riempi tutta la progressbar
             // 2:ottieni nuovo max

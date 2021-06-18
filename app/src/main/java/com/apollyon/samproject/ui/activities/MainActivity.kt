@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -27,6 +28,7 @@ import com.apollyon.samproject.R
 import com.apollyon.samproject.data.RunningDatabase
 import com.apollyon.samproject.utilities.LevelUtil
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -48,13 +50,8 @@ class MainActivity : AppCompatActivity() {
         // bottom navigation
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
         if (navHostFragment != null) NavigationUI.setupWithNavController(bottomNavigationView, navHostFragment.navController)
-
-        if(viewModel.authUser?.photoUrl != null)
-            changePicture(viewModel.authUser?.photoUrl)
-
-        viewModel.profileImageDownloaded.observe(this, Observer {uri ->
-            changePicture(uri)
-        })
+        val levelText = findViewById<TextView>(R.id.level_text)
+        val progressBar = findViewById<ProgressBar>(R.id.progress_top)
 
         viewModel.shouldHideBars.observe(this, Observer{ shouldHide ->
             if(shouldHide) {
@@ -64,29 +61,37 @@ class MainActivity : AppCompatActivity() {
                 if (navHostFragment != null) {
                     navHostFragment.navController.graph.startDestination = R.id.loginFragment
                 }
-
             }
             else {
                 bottomNavigationView.visibility = VISIBLE
                 toolbar_cont.visibility = VISIBLE
 
                 if (navHostFragment != null) {
-                    navHostFragment.navController.graph.startDestination = R.id.achievements
+                    navHostFragment.navController.graph.startDestination = R.id.home
                 }
+
+                val contextOfSnackbar = findViewById<ConstraintLayout>(R.id.main_constraint)
+                viewModel.pendingSnackbarInfo.observe(this, Observer {
+                    if(it != ""){
+                        Snackbar.make(contextOfSnackbar, it, Snackbar.LENGTH_SHORT).show()
+                        viewModel.pendingSnackbarInfo.postValue("")
+                    }
+                })
+
+                if(viewModel.authUser?.photoUrl != null)
+                    changePicture(viewModel.authUser?.photoUrl)
+                viewModel.profileImageDownloaded.observe(this, Observer {uri ->
+                    changePicture(uri)
+                })
+                viewModel.userFromRealtime.observe(this, Observer {
+                    if (it != null) {
+                        levelText.text = "Lvl ${it.level}"
+                        progressBar.max = LevelUtil.xpForNextLevel(it.level!! - 1).toInt()
+                        progressBar.progress = progressBar.max - it.xpToNextLevel!!.toInt()
+                    }
+                })
             }
         })
-
-        val levelText = findViewById<TextView>(R.id.level_text)
-        val progressBar = findViewById<ProgressBar>(R.id.progress_top)
-
-        viewModel.userFromRealtime.observe(this, Observer {
-            if (it != null) {
-                levelText.text = "Lvl ${it.level}"
-                progressBar.max = LevelUtil.xpForNextLevel(it.level!! - 1).toInt()
-                progressBar.progress = progressBar.max - it.xpToNextLevel!!.toInt()
-            }
-        })
-
     }
 
     private fun changePicture(uri : Uri?){
@@ -94,6 +99,4 @@ class MainActivity : AppCompatActivity() {
         Glide.with(this)
             .load(uri).into(imageView)
     }
-
-
 }
