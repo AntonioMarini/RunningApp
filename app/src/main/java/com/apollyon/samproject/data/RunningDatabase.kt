@@ -20,7 +20,7 @@ abstract class RunningDatabase : RoomDatabase() {
 
     abstract val runDao: RunDao
     abstract val userDao: UsersDao
-    abstract val achievementDAo: MissionsDao
+    abstract val missionsDao: MissionsDao
 
     companion object {
         @Volatile
@@ -61,7 +61,7 @@ abstract class RunningDatabase : RoomDatabase() {
 
         private suspend fun populateInitialData(appcontext: Context) {
             withContext(IO) {
-                getInstance(appcontext).achievementDAo.insertManyMissions(
+                getInstance(appcontext).missionsDao.insertManyMissions(
                     listOf(
                         Mission(
                             null,

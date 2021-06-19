@@ -56,7 +56,7 @@ class RunResultsFragment : Fragment(){
         return binding.root
     }
 
-    fun getXp(currentXp:Long, xpGained: Long){
+    private fun getXp(currentXp:Long, xpGained: Long){
         val oldLevel = mainViewModel.userFromRealtime.value!!.level!!
         val oldXp = currentXp
 
@@ -69,7 +69,7 @@ class RunResultsFragment : Fragment(){
     }
 
 
-    fun animateProgressBar(oldLevel: Int, oldXp:Long, newLevel:Int, newXp: Long){
+    private fun animateProgressBar(oldLevel: Int, oldXp:Long, newLevel:Int, newXp: Long){
         var currLevel = oldLevel
         var maxLevelXp = LevelUtil.xpForNextLevel(currLevel-1)
         var progressAnimation : ProgressAnimation

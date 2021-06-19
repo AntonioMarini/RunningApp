@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentStatsBinding
+import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.viewmodels.MainViewModel
 import java.text.SimpleDateFormat
 
@@ -21,7 +22,7 @@ class StatsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_stats, container, false)
         // Inflate the layout for this fragment
         return binding.root
@@ -31,7 +32,7 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.totalKm.observe(viewLifecycleOwner, Observer {
             if(it!=null)
-                binding.distanceText.text = "Total distance: ${it} km"
+                binding.distanceText.text = String.format("Total distance: %.2f km", RunUtil.getDistanceKm(it))
             else
                 binding.distanceText.text = "Total distance: ${0} km"
         })

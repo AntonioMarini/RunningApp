@@ -17,7 +17,6 @@ class TrainingsAdapter(
 
     private lateinit var layoutInflater: LayoutInflater
 
-
     override fun getCount(): Int {
         return models.size
     }
