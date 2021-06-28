@@ -6,6 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,6 +29,14 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
 
     private lateinit var viewPager: ViewPager
     private lateinit var trainingsAdapter: TrainingsAdapter
+    private lateinit var trainingModes: ArrayList<TrainingMode>
+
+    private lateinit var timesAdapter: ArrayAdapter<CharSequence>
+    private lateinit var distAdapter: ArrayAdapter<CharSequence>
+
+    private lateinit var trainingModeSelected : TrainingMode
+    private var timeLimit : String? = null
+    private var distLimit : String? = null
 
     private val mainViewModel : MainViewModel by activityViewModels()
 
@@ -47,10 +59,14 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
         val sessionViewModel = ViewModelProvider(this).get(SessionViewModel::class.java)
         binding.sessionViewModel = sessionViewModel
 
-        val trainingModes = ArrayList<TrainingMode>()
-        trainingModes.add(TrainingMode(R.drawable.raccoon, "Standard Running", "This is pretty normal"))
-        //trainingModes.add(TrainingMode(R.drawable.ghepardo, "HIIT Running", "High-intensity interval training running consists of intervals of high intensive run with lower intensive intervals"))
-        trainingModes.add(TrainingMode(R.drawable.falco, "Cycling", "Bike is nice"))
+        trainingModes = ArrayList<TrainingMode>()
+        trainingModes.add(TrainingMode(R.drawable.runnerboi, "Free Running", "Run without any limit."))
+
+        // ESEMPI DI ALTRE POSSIBILI MODALITA
+        //trainingModes.add(TrainingMode(R.drawable.ghepardo, "Time limit", "Run for a certain period of time."))
+        //trainingModes.add(TrainingMode(R.drawable.falco, "Distance limit", "Run for a certain distance."))
+
+        trainingModeSelected = trainingModes[0] // di default scelgo la prima (free running)
 
         trainingsAdapter = TrainingsAdapter(trainingModes, context)
 
@@ -61,7 +77,7 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
         binding.buttonStart.setOnClickListener {
             if (permissionsGranted) {
                 this.findNavController()
-                    .navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment())
+                    .navigate(NewSessionFragmentDirections.actionNewSessionToRunMapFragment(trainingModeSelected))
             }
             else
                 requestPermissions()
@@ -73,12 +89,14 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
         return binding.root
     }
 
+
+
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
             ;
     }
 
     override fun onPageSelected(position: Int) {
-            ;
+        trainingModeSelected = trainingModes[position]
     }
 
     override fun onPageScrollStateChanged(state: Int) {
@@ -128,13 +146,10 @@ class NewSessionFragment : Fragment(), ViewPager.OnPageChangeListener, EasyPermi
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults, this)
     }
 
     companion object{
         const val REQUEST_CODE_LOCATION_PERMISSION = 99
     }
-
-
 }

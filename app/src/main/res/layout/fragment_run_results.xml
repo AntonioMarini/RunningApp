@@ -106,6 +106,16 @@
                 app:layout_constraintStart_toStartOf="@+id/text_km"
                 app:layout_constraintTop_toBottomOf="@+id/text_km" />
 
+            <ImageButton
+                android:id="@+id/share_butt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:background="@color/material_on_background_disabled"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:srcCompat="@drawable/ic_baseline_share_24"
+                tools:layout_editor_absoluteY="40dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

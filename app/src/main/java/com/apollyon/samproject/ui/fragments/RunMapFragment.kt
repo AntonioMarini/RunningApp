@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunMapBinding
 import com.apollyon.samproject.data.RunningSession
+import com.apollyon.samproject.data.TrainingMode
 import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.services.RunService
 import com.apollyon.samproject.viewmodels.MainViewModel
@@ -44,6 +45,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
     private var pathPoints = mutableListOf<MutableList<LatLng>>()
 
     private var session: RunningSession? = null
+    private lateinit var trainingMode : TrainingMode
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +55,9 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_map, container, false)
         polylineOptions = PolylineOptions()
+
+        val arguments = RunMapFragmentArgs.fromBundle(requireArguments())
+        trainingMode = arguments.trainingMode
 
         // nascondo la topbar e la bottom navbar
         mainViewModel.onHideBars()
@@ -172,6 +177,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
     private fun sendCommandToService(action: String){
         Intent(requireContext(), RunService::class.java).also {
             it.action = action
+            it.putExtra("trMode",trainingMode)
             requireContext().startService(it)
         }
     }

@@ -18,6 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.apollyon.samproject.ui.activities.MainActivity
 import com.apollyon.samproject.R
+import com.apollyon.samproject.data.TrainingMode
 import com.apollyon.samproject.utilities.RunUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -34,7 +35,7 @@ import kotlinx.coroutines.launch
  * A Foreground Service that holds locations data, time, distance,
  * to be shared with the app. It creates a notification
  */
-class RunService : LifecycleService() {
+class RunService() : LifecycleService() {
 
     private var isFirstRun = true
 
@@ -42,6 +43,8 @@ class RunService : LifecycleService() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val timeRunInSeconds = MutableLiveData<Long>()
+
+    //private lateinit var trainingMode: TrainingMode
 
     // used to create(build) a new notification or update existing one
     private lateinit var currentNotificationBuilder: NotificationCompat.Builder
@@ -56,6 +59,7 @@ class RunService : LifecycleService() {
         val distanceInMeters = MutableLiveData<Int>()
         val isTracking = MutableLiveData<Boolean>()
         val pathPoints = MutableLiveData<MutableList<MutableList<LatLng>>>()
+
     }
 
     // initializes the livedata
@@ -66,6 +70,8 @@ class RunService : LifecycleService() {
         timeRunInMillis.postValue(0L)
         distanceInMeters.postValue(0)
     }
+
+
 
     /**
      *  Create a new empty polyline in the list of polyline,

@@ -1,5 +1,6 @@
 package com.apollyon.samproject.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +54,21 @@ class RunResultsFragment : Fragment(){
 
         getXp(currentXp, xpGained)
 
+
+
         return binding.root
+    }
+
+    private fun shareContent() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "${mainViewModel.userFromRealtime.value?.username}: " +
+                    "\n ${session.distanceInMeters}m" +
+                    "\n ${RunUtil.getFormattedTime(session.timeMilli, true)}")
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     private fun getXp(currentXp:Long, xpGained: Long){
@@ -96,6 +111,10 @@ class RunResultsFragment : Fragment(){
         binding.button.setOnClickListener{
             mainViewModel.insertSession(session)
             this.findNavController().navigate(RunResultsFragmentDirections.actionRunResultsFragmentToHome())
+        }
+
+        binding.shareButt.setOnClickListener {
+            shareContent();
         }
     }
 

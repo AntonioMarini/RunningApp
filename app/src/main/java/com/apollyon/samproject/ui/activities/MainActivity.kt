@@ -22,18 +22,19 @@ import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import com.gu.toolargetool.TooLargeTool;
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-
-    private var isOflline = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        TooLargeTool.startLogging(application);
         //viewmodel principale con cui tutti i fragment comunicano, mantiene il repository con tutti i dao
         viewModel = ViewModelProvider(this, MainViewModelFactory(application)).get(MainViewModel::class.java)
 
