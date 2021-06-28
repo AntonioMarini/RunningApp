@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
         val sessionsAdapter = SessionsAdapter()
         recycler_view.adapter = sessionsAdapter
 
-        mainViewModel.runSessions.observe(viewLifecycleOwner, Observer { runs ->
+        mainViewModel.allUserSessions.observe(viewLifecycleOwner, Observer { runs ->
             runs?.let {
                 sessionsAdapter.data = it
             }

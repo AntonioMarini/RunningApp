@@ -9,4 +9,20 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="times_array">
+        <item>15m</item>
+        <item>30m</item>
+        <item>45m</item>
+        <item>1h</item>
+    </string-array>
+
+    <string-array name="distances_array">
+        <item>500m</item>
+        <item>1km</item>
+        <item>2.5km</item>
+        <item>5km</item>
+        <item>7.5km</item>
+        <item>10km</item>
+    </string-array>
 </resources>

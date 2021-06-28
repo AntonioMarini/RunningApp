@@ -30,8 +30,6 @@ class RegisterViewModel() : ViewModel(){
     //well encapsulated livedata fields that contains the data of the form
     // they also prevent to lose the data when the fragment associated is destroyed
     // (e.g. when the screen is rotated)
-
-
     lateinit var user : User
 
     private val _userAdded = MutableLiveData<Boolean>()

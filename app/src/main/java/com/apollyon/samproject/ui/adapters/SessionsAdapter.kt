@@ -23,7 +23,7 @@ class SessionsAdapter : RecyclerView.Adapter<SessionsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
-        var timeText: TextView = itemView.findViewById(R.id.time_text) as TextView
+        var timeText: TextView = itemView.findViewById(R.id.space_spinner) as TextView
         var distanceText : TextView = itemView.findViewById(R.id.distance_text) as TextView
         var caloriesText : TextView = itemView.findViewById(R.id.calories_text) as TextView
         var dateText : TextView = itemView.findViewById(R.id.date_text) as TextView

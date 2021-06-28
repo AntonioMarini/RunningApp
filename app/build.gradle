@@ -109,6 +109,9 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.3.0"
 
+    //debug toolargeException
+    implementation 'com.gu.android:toolargetool:0.3.0'
+
     // Easy permissions
     // For developers using AndroidX in their applications
     implementation 'pub.devrel:easypermissions:3.0.0'

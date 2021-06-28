@@ -13,41 +13,47 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.StatsFragment">
 
-    <TextView
-        android:id="@+id/distance_text"
-        style="@style/style_stats"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499">
 
-    <TextView
-        android:id="@+id/tot_time_text"
-        style="@style/style_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@id/distance_text"
-        app:layout_constraintTop_toBottomOf="@id/distance_text" />
+        <TextView
+            android:id="@+id/distance_text"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp" />
 
-    <TextView
-        android:id="@+id/tot_avg_speed"
-        style="@style/style_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@id/distance_text"
-        app:layout_constraintTop_toBottomOf="@id/tot_time_text" />
+        <TextView
+            android:id="@+id/tot_cal_burned"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp" />
 
-    <TextView
-        android:id="@+id/tot_cal_burned"
-        style="@style/style_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@id/distance_text"
-        app:layout_constraintTop_toBottomOf="@id/tot_avg_speed" />
+        <TextView
+            android:id="@+id/tot_avg_speed"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp" />
+
+        <TextView
+            android:id="@+id/tot_time_text"
+            android:textSize="30sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="24dp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

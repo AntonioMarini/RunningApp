@@ -1,5 +1,6 @@
 package com.apollyon.samproject.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,10 +54,24 @@ class RunResultsFragment : Fragment(){
 
         getXp(currentXp, xpGained)
 
+
+
         return binding.root
     }
 
-    fun getXp(currentXp:Long, xpGained: Long){
+    private fun shareContent() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "${mainViewModel.userFromRealtime.value?.username}: " +
+                    "\n ${session.distanceInMeters}m" +
+                    "\n ${RunUtil.getFormattedTime(session.timeMilli, true)}")
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
+    private fun getXp(currentXp:Long, xpGained: Long){
         val oldLevel = mainViewModel.userFromRealtime.value!!.level!!
         val oldXp = currentXp
 
@@ -69,7 +84,7 @@ class RunResultsFragment : Fragment(){
     }
 
 
-    fun animateProgressBar(oldLevel: Int, oldXp:Long, newLevel:Int, newXp: Long){
+    private fun animateProgressBar(oldLevel: Int, oldXp:Long, newLevel:Int, newXp: Long){
         var currLevel = oldLevel
         var maxLevelXp = LevelUtil.xpForNextLevel(currLevel-1)
         var progressAnimation : ProgressAnimation
@@ -96,6 +111,10 @@ class RunResultsFragment : Fragment(){
         binding.button.setOnClickListener{
             mainViewModel.insertSession(session)
             this.findNavController().navigate(RunResultsFragmentDirections.actionRunResultsFragmentToHome())
+        }
+
+        binding.shareButt.setOnClickListener {
+            shareContent();
         }
     }
 

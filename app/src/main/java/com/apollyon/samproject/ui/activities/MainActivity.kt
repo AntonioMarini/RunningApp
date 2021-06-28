@@ -1,51 +1,42 @@
 package com.apollyon.samproject.ui.activities
 
 import android.net.Uri
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.apollyon.samproject.viewmodels.MainViewModel
-import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.apollyon.samproject.R
 import com.apollyon.samproject.data.RunningDatabase
 import com.apollyon.samproject.utilities.LevelUtil
+import com.apollyon.samproject.viewmodels.MainViewModelFactory
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import com.gu.toolargetool.TooLargeTool;
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-
-    private var isOflline = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val dataSource = RunningDatabase.getInstance(application)
-
-        //viewmodel principale con cui tutti i fragment comunicano, mantiene il dao
-        viewModel = ViewModelProvider(this , MainViewModelFactory(dataSource.userDao, dataSource.runDao, dataSource.achievementDAo)).get(MainViewModel::class.java)
+        TooLargeTool.startLogging(application);
+        //viewmodel principale con cui tutti i fragment comunicano, mantiene il repository con tutti i dao
+        viewModel = ViewModelProvider(this, MainViewModelFactory(application)).get(MainViewModel::class.java)
 
         // bottom navigation
         val navHostFragment : NavHostFragment? = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment?
@@ -83,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.profileImageDownloaded.observe(this, Observer {uri ->
                     changePicture(uri)
                 })
+
                 viewModel.userFromRealtime.observe(this, Observer {
                     if (it != null) {
                         levelText.text = "Lvl ${it.level}"
