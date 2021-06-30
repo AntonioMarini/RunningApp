@@ -103,19 +103,12 @@
         android:name="com.apollyon.samproject.ui.fragments.RunResultsFragment"
         android:label="RunResultsFragment"
         tools:layout="@layout/fragment_run_results">
-        <argument
-            android:name="session"
-            app:argType="com.apollyon.samproject.data.RunningSession"
-            app:nullable="true" />
         <action
             android:id="@+id/action_runResultsFragment_to_home"
             app:destination="@id/home"
             app:launchSingleTop="true"
             app:popUpTo="@id/runResultsFragment"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="mapScreenBitmap"
-            app:argType="android.graphics.Bitmap" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

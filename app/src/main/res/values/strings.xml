@@ -25,29 +25,24 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="km_text">Distance: </string>
-
-
     <!-- Permissions -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
     <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
     <string name="permission_required_toast">Location permission is required for this demo.</string>
-
     <!-- MAP IDS -->
     <string name="map_dark_id">559db652f34e3e3e</string>
     <string name="start_text">Start</string>
     <string name="pause_text">pause</string>
     <string name="start_time">00:00:00:00</string>
     <string name="clear">Clear History</string>
-    <string name="height">Height</string>
-    <string name="weight">Weight</string>
+    <string name="height">Height (in meters)</string>
+    <string name="weight">Weight (in kg)</string>
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
-
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
-
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>

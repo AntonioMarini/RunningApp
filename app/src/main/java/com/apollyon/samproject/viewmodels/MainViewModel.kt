@@ -165,6 +165,10 @@ class MainViewModel(application: Application) : ViewModel(){
         }
     }
 
+    fun getLastSession() : RunningSession? {
+        return allUserSessions.value?.get(0)
+    }
+
     fun clearSessions() {
         runRepository.clearSessions()
     }
@@ -173,7 +177,7 @@ class MainViewModel(application: Application) : ViewModel(){
         runRepository.insertNewUserLocal(user)
     }
 
-    fun insertSession(session: RunningSession) {
+    fun insertSession(session: RunningSession){
         runRepository.insertSession(session)
     }
     //altre funzioni per altri tipi di missioni che hanno condizioni su utenti per esempio...

@@ -2,6 +2,7 @@ package com.apollyon.samproject.repositories
 
 import android.app.Application
 import android.content.ContentValues
+import android.se.omapi.Session
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,13 +16,13 @@ import kotlinx.coroutines.*
 
 class RunRepository(application: Application) {
 
-    private lateinit var runsDao: RunDao
+    private var runsDao: RunDao
     private lateinit var allRuns : LiveData<List<RunningSession>>
 
-    private lateinit var usersDao: UsersDao
+    private var usersDao: UsersDao
     private lateinit var currentUser : LiveData<User>
 
-    private lateinit var missionsDao: MissionsDao
+    private var missionsDao: MissionsDao
     private lateinit var allMissions : LiveData<List<Mission>>
 
     private lateinit var totalMeters : LiveData<Int>

@@ -7,7 +7,7 @@ import androidx.room.*
 interface RunDao {
 
     @Insert
-    suspend fun insertRun(session: RunningSession)
+    suspend fun insertRun(session: RunningSession) : Long
 
     @Update
     suspend fun updateRun(session: RunningSession)
@@ -19,7 +19,7 @@ interface RunDao {
     suspend fun deleteAllRunsOfUser(uid: String?)
 
     @Query("select * from running_sessions where session_id = :sessionID and user = :uid")
-    fun getRun(sessionID: Long, uid: String?) : RunningSession
+    fun getRun(sessionID: Long, uid: String?) : LiveData<RunningSession>
 
     @Query("select * from running_sessions order by timestamp desc")
     fun getAllRuns() : LiveData<List<RunningSession>>

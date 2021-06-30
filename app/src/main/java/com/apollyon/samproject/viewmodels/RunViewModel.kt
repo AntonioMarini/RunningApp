@@ -13,6 +13,4 @@ class RunViewModel(dataSource : RunDao?) : ViewModel() {
     override fun onCleared() {
         super.onCleared()
     }
-
-
 }

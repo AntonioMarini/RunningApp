@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.apollyon.samproject.R
 import com.apollyon.samproject.databinding.FragmentRunResultsBinding
@@ -16,6 +17,7 @@ import com.apollyon.samproject.ui.ProgressAnimation
 import com.apollyon.samproject.utilities.LevelUtil
 import com.apollyon.samproject.utilities.RunUtil
 import com.apollyon.samproject.viewmodels.MainViewModel
+import com.bumptech.glide.Glide
 
 class RunResultsFragment : Fragment(){
 
@@ -30,18 +32,6 @@ class RunResultsFragment : Fragment(){
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_run_results, container, false)
 
-        val arguments = RunResultsFragmentArgs.fromBundle(requireArguments()) // prendo la sessione dal bundle degli argomenti (safeargs)
-        session = arguments.session!!
-
-        val km = session.distanceInMeters.toDouble() * 0.001
-        val xpGained = LevelUtil.calculateXpFromRun(session.caloriesBurned, session.avgSpeedInKMH)
-
-        binding.xpGained.text = "XP gained from run: ${xpGained}xp"
-        binding.textKm.text = String.format("Distance: %.2f km", km)
-        binding.textTime.text = "Time: ${RunUtil.getFormattedTime(session.timeMilli)}"
-        binding.textCalories.text = "Calories burned: ${session.caloriesBurned}"
-        binding.imgMap.setImageBitmap(arguments.mapScreenBitmap)
-
         val maxLevelXp = LevelUtil.xpForNextLevel(mainViewModel.userFromRealtime.value!!.level!! - 1)
         val currentXp = maxLevelXp - mainViewModel.userFromRealtime.value!!.xpToNextLevel!!
 
@@ -50,12 +40,23 @@ class RunResultsFragment : Fragment(){
         progressAnimation.duration = 1000
         binding.progressBar2.startAnimation(progressAnimation)
 
-        session.map_screen = arguments.mapScreenBitmap
+        mainViewModel.allUserSessions.observe(viewLifecycleOwner, Observer {
+            if (it.isNotEmpty()){
+                session = it[0]
+                val km = session.distanceInMeters.toDouble() * 0.001
+                val xpGained = LevelUtil.calculateXpFromRun(session.caloriesBurned, session.avgSpeedInKMH)
 
-        getXp(currentXp, xpGained)
-
-
-
+                binding.xpGained.text = "XP gained from run: ${xpGained}xp"
+                binding.textKm.text = String.format("Distance: %.2f km", km)
+                binding.textTime.text = "Time: ${RunUtil.getFormattedTime(session.timeMilli)}"
+                binding.textCalories.text = "Calories burned: ${session.caloriesBurned}"
+                Glide
+                    .with(this)
+                    .load(session.map_screen)
+                    .into(binding.imgMap);
+                getXp(currentXp, xpGained)
+            }
+        })
         return binding.root
     }
 
@@ -109,7 +110,6 @@ class RunResultsFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.button.setOnClickListener{
-            mainViewModel.insertSession(session)
             this.findNavController().navigate(RunResultsFragmentDirections.actionRunResultsFragmentToHome())
         }
 
@@ -117,7 +117,4 @@ class RunResultsFragment : Fragment(){
             shareContent();
         }
     }
-
-
-
 }

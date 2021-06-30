@@ -198,19 +198,20 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
             timeMilli = curTimeInMillis,
             timestamp = System.currentTimeMillis(),
             avgSpeedInKMH = RunUtil.calculateAvgSpeedKmh(metersDone, curTimeInMillis),
-            caloriesBurned = RunUtil.calculateCalories(metersDone, mainViewModel.userFromRealtime.value!!.weight!!)
-        ) //TODO weight non hardcoded
+            caloriesBurned = RunUtil.calculateCalories(metersDone, mainViewModel.userFromRealtime.value!!.weight!!
+            )
+        )
 
         zoomToSeeWholeTrack()
 
         map?.snapshot { bitmap->
             // navigate to the RunResults Fragment
             if (bitmap != null) {
+                session!!.map_screen = bitmap
+                mainViewModel.insertSession(session!!)
                 this.findNavController().navigate(
-                    RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment(
-                        mapScreenBitmap = bitmap,
-                        session = session
-                ))
+                    RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment()
+                )
             }
         }
     }
