@@ -208,6 +208,7 @@ class RunMapFragment : Fragment(), OnMapReadyCallback{
             // navigate to the RunResults Fragment
             if (bitmap != null) {
                 session!!.map_screen = bitmap
+                mainViewModel.lastRun = session
                 mainViewModel.insertSession(session!!)
                 this.findNavController().navigate(
                     RunMapFragmentDirections.actionRunMapFragmentToRunResultsFragment()

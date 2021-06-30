@@ -19,6 +19,7 @@ class RunRepository(application: Application) {
     private var runsDao: RunDao
     private lateinit var allRuns : LiveData<List<RunningSession>>
 
+
     private var usersDao: UsersDao
     private lateinit var currentUser : LiveData<User>
 

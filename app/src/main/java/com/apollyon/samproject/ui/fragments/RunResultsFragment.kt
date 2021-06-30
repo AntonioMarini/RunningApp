@@ -40,23 +40,21 @@ class RunResultsFragment : Fragment(){
         progressAnimation.duration = 1000
         binding.progressBar2.startAnimation(progressAnimation)
 
-        mainViewModel.allUserSessions.observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()){
-                session = it[0]
-                val km = session.distanceInMeters.toDouble() * 0.001
-                val xpGained = LevelUtil.calculateXpFromRun(session.caloriesBurned, session.avgSpeedInKMH)
 
-                binding.xpGained.text = "XP gained from run: ${xpGained}xp"
-                binding.textKm.text = String.format("Distance: %.2f km", km)
-                binding.textTime.text = "Time: ${RunUtil.getFormattedTime(session.timeMilli)}"
-                binding.textCalories.text = "Calories burned: ${session.caloriesBurned}"
-                Glide
-                    .with(this)
-                    .load(session.map_screen)
-                    .into(binding.imgMap);
-                getXp(currentXp, xpGained)
-            }
-        })
+        session = mainViewModel.lastRun!!
+        val km = session.distanceInMeters.toDouble() * 0.001
+        val xpGained = LevelUtil.calculateXpFromRun(session.caloriesBurned, session.avgSpeedInKMH)
+
+        binding.xpGained.text = "XP gained from run: ${xpGained}xp"
+        binding.textKm.text = String.format("Distance: %.2f km", km)
+        binding.textTime.text = "Time: ${RunUtil.getFormattedTime(session.timeMilli)}"
+        binding.textCalories.text = "Calories burned: ${session.caloriesBurned}"
+        Glide
+            .with(this)
+            .load(session.map_screen)
+            .into(binding.imgMap);
+        getXp(currentXp, xpGained)
+
         return binding.root
     }
 

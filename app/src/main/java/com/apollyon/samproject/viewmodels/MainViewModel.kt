@@ -35,6 +35,8 @@ class MainViewModel(application: Application) : ViewModel(){
     lateinit var totalAvgSpeed : LiveData<Float>
     lateinit var totalCalories : LiveData<Int>
 
+    var lastRun : RunningSession? = null
+
     //to hide/show the topbar and navbar
     private val _shouldHideBars = MutableLiveData<Boolean>(false)
     val shouldHideBars :LiveData<Boolean> get() = _shouldHideBars
