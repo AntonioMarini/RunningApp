@@ -13,13 +13,21 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_run"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_run_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SAMproject">
+        android:theme="@style/Theme.SAMproject"
+
+        >
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -29,10 +37,6 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity
             android:name=".ui.activities.MainActivity"
             android:theme="@style/Theme.SAMproject"

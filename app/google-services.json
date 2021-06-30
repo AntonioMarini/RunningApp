@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "581381072686",
-    "project_id": "samproject-a33bb",
-    "storage_bucket": "samproject-a33bb.appspot.com"
+    "project_number": "41989784978",
+    "project_id": "dungeon-runners",
+    "storage_bucket": "dungeon-runners.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:581381072686:android:c4a46d75ad1cbb180f7cbf",
+        "mobilesdk_app_id": "1:41989784978:android:566be74fb1cbca4f37ed4b",
         "android_client_info": {
           "package_name": "com.apollyon.samproject"
         }
       },
       "oauth_client": [
         {
-          "client_id": "581381072686-75gorsm0bf5anlnquupojarutegl556q.apps.googleusercontent.com",
+          "client_id": "41989784978-dkvh877ql9f4f0rcqivd7pfdvqik8lud.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD0LTSoitiuMB_CVemtrhgF9-GnQPmNlhM"
+          "current_key": "AIzaSyA7o1M0QPPZrdddl4NxBi-6Pno-VkAuOpU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "581381072686-75gorsm0bf5anlnquupojarutegl556q.apps.googleusercontent.com",
+              "client_id": "41989784978-dkvh877ql9f4f0rcqivd7pfdvqik8lud.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

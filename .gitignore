@@ -10,6 +10,8 @@
 .DS_Store
 /build
 /captures
+/google-services.json
+/app/src/main/res/xml/goo
 .externalNativeBuild
 .cxx
 local.properties

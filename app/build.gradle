@@ -1,8 +1,8 @@
 plugins {
-    id 'com.google.secrets_gradle_plugin' version '0.5'
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 apply plugin: 'kotlin-android-extensions'
